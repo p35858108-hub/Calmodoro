@@ -1,0 +1,6 @@
+{
+  "name": "Calmodoro",
+  "description": "Minimalist Pomodoro timer and academic schedule manager with offline Room persistence and foreground notifications.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
