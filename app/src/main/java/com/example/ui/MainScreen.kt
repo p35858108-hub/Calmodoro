@@ -26,6 +26,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+// Imports de tus pantallas y modelos
+import com.example.AppTab
+import com.example.CalmodoroBottomNavBar
+import com.example.CalendarScreen
+import com.example.CalendarViewModel
+import com.example.PomodoroScreen
+import com.example.PomodoroViewModel
+import com.example.ScheduleScreen
+import com.example.ScheduleViewModel
+import com.example.SettingsScreen
+import com.example.SettingsViewModel
+
 @Composable
 fun MainScreen(
     calendarViewModel: CalendarViewModel = viewModel(),
