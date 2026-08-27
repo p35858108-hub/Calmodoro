@@ -1,4 +1,4 @@
-package com.example.ui.pomodoro
+package app.calmodoro.com
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
