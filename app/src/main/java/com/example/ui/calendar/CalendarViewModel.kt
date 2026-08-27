@@ -6,11 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.CalmodoroApp
 import com.example.data.local.entity.TaskEntity
 import com.example.receiver.TaskAlarmScheduler
+import com.example.data.local.entity.matchesDate
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -44,20 +45,25 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
     private val _viewingMonthCalendar = MutableStateFlow(Calendar.getInstance())
     val viewingMonthCalendar: StateFlow<Calendar> = _viewingMonthCalendar.asStateFlow()
 
-    val tasksForDate: StateFlow<List<TaskEntity>> = _selectedDateIso
-        .flatMapLatest { dateStr -> repository.getTasksForDate(dateStr) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-
     val allTasks: StateFlow<List<TaskEntity>> = repository.getAllTasks()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    val tasksForDate: StateFlow<List<TaskEntity>> = combine(
+        repository.getAllTasks(),
+        _selectedDateIso,
+        _selectedDateCalendar
+    ) { all, iso, cal ->
+        all.filter { it.matchesDate(iso, cal) }
+            .sortedBy { it.startTime }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun setViewMode(mode: CalendarViewMode) {
         _viewMode.value = mode

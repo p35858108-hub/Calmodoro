@@ -29,24 +29,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -70,18 +66,22 @@ import com.example.ui.calendar.parseColor
 import com.example.ui.components.AddScheduleDialog
 import com.example.ui.components.DaysOfWeekLabels
 import com.example.ui.components.calculateMinutesDiff
-import com.example.ui.theme.AccentRose
-import com.example.ui.theme.BackgroundDark
-import com.example.ui.theme.OnPrimaryContainer
-import com.example.ui.theme.OnSurface
-import com.example.ui.theme.OnSurfaceVariant
-import com.example.ui.theme.OutlineColor
-import com.example.ui.theme.OutlineVariant
-import com.example.ui.theme.PrimaryContainer
-import com.example.ui.theme.PrimaryIndigo
-import com.example.ui.theme.SurfaceContainer
-import com.example.ui.theme.SurfaceContainerHigh
-import com.example.ui.theme.SurfaceDark
+import com.example.ui.theme.CozyBorder
+import com.example.ui.theme.CozyBorderSubtle
+import com.example.ui.theme.CozyCardAlt
+import com.example.ui.theme.CozyCardBg
+import com.example.ui.theme.CozyCocoaMuted
+import com.example.ui.theme.CozyCocoaText
+import com.example.ui.theme.CozyCreamBg
+import com.example.ui.theme.CozyForestDark
+import com.example.ui.theme.CozyHoney
+import com.example.ui.theme.CozyHoneyContainer
+import com.example.ui.theme.CozyLeafGreen
+import com.example.ui.theme.CozyLeafGreenContainer
+import com.example.ui.theme.CozyPeach
+import com.example.ui.theme.CozyPeachContainer
+import com.example.ui.theme.CozySky
+import com.example.ui.theme.CozySkyContainer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,7 +108,7 @@ fun ScheduleScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundDark)
+            .background(CozyCreamBg)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -117,7 +117,7 @@ fun ScheduleScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .padding(horizontal = 18.dp, vertical = 14.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -125,24 +125,27 @@ fun ScheduleScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "Horario Semanal",
+                                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                                color = CozyForestDark
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(20.dp))
+                        }
                         Text(
-                            text = "Horario Semanal",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = OnSurface,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Configuración recurrente de clases y bloques fijos",
+                            text = "Tus clases y bloques de estudio recurrentes",
                             style = MaterialTheme.typography.labelMedium,
-                            color = OutlineColor
+                            color = CozyCocoaMuted
                         )
                     }
 
                     // Sync button
                     Surface(
-                        shape = RoundedCornerShape(10.dp),
-                        color = SurfaceContainerHigh,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, OutlineVariant.copy(alpha = 0.5f)),
+                        shape = RoundedCornerShape(14.dp),
+                        color = CozySkyContainer,
+                        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozySky.copy(alpha = 0.4f)),
                         modifier = Modifier
                             .clickable {
                                 viewModel.importScheduleToToday { count ->
@@ -164,19 +167,19 @@ fun ScheduleScreen(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Download,
                                 contentDescription = "Sincronizar",
-                                tint = PrimaryIndigo,
+                                tint = CozySky,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Importar a Hoy",
-                                color = PrimaryIndigo,
-                                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
+                                color = CozySky,
+                                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold)
                             )
                         }
                     }
@@ -188,8 +191,9 @@ fun ScheduleScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(SurfaceContainer)
+                        .clip(RoundedCornerShape(18.dp))
+                        .background(CozyCardBg)
+                        .border(1.5.dp, CozyBorder, RoundedCornerShape(18.dp))
                         .padding(4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -200,9 +204,9 @@ fun ScheduleScreen(
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(44.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(if (isSelected) PrimaryContainer else Color.Transparent)
+                                .height(46.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(if (isSelected) CozyLeafGreen else Color.Transparent)
                                 .clickable { viewModel.selectDay(dayInt) },
                             contentAlignment = Alignment.Center
                         ) {
@@ -213,17 +217,17 @@ fun ScheduleScreen(
                                 Text(
                                     text = label,
                                     style = MaterialTheme.typography.labelMedium.copy(
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                         fontSize = 12.sp
                                     ),
-                                    color = if (isSelected) OnPrimaryContainer else OnSurfaceVariant
+                                    color = if (isSelected) Color.White else CozyCocoaText
                                 )
                                 if (count > 0) {
                                     Box(
                                         modifier = Modifier
                                             .size(5.dp)
                                             .clip(CircleShape)
-                                            .background(if (isSelected) OnPrimaryContainer else PrimaryIndigo)
+                                            .background(if (isSelected) Color.White else CozyLeafGreen)
                                     )
                                 }
                             }
@@ -232,25 +236,26 @@ fun ScheduleScreen(
                 }
             }
 
-            HorizontalDivider(color = SurfaceContainer.copy(alpha = 0.6f), thickness = 1.dp)
+            HorizontalDivider(color = CozyBorderSubtle, thickness = 1.dp)
 
             // Timeline List of Schedule
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 18.dp),
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(top = 16.dp, bottom = 120.dp),
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
                 if (scheduleList.isEmpty()) {
                     item {
-                        Card(
-                            shape = RoundedCornerShape(18.dp),
-                            colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+                        Surface(
+                            shape = RoundedCornerShape(22.dp),
+                            color = CozyCardBg,
+                            border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
+                            shadowElevation = 1.dp,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 32.dp, horizontal = 8.dp)
+                                .padding(vertical = 32.dp, horizontal = 4.dp)
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -260,14 +265,14 @@ fun ScheduleScreen(
                             ) {
                                 Surface(
                                     shape = CircleShape,
-                                    color = SurfaceContainer,
-                                    modifier = Modifier.size(64.dp)
+                                    color = CozyLeafGreenContainer,
+                                    modifier = Modifier.size(68.dp)
                                 ) {
                                     Box(contentAlignment = Alignment.Center) {
                                         Icon(
                                             imageVector = Icons.Filled.School,
                                             contentDescription = null,
-                                            tint = PrimaryIndigo,
+                                            tint = CozyLeafGreen,
                                             modifier = Modifier.size(32.dp)
                                         )
                                     }
@@ -275,29 +280,28 @@ fun ScheduleScreen(
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
                                     text = "Sin clases programadas",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = OnSurface,
-                                    fontWeight = FontWeight.Bold
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = CozyForestDark
                                 )
                                 Spacer(modifier = Modifier.height(6.dp))
                                 Text(
                                     text = "Organiza tu semana agregando tus materias o bloques fijos de estudio.",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = OnSurfaceVariant,
+                                    color = CozyCocoaMuted,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                                 )
                                 Spacer(modifier = Modifier.height(18.dp))
                                 Button(
                                     onClick = { showAddDialog = true },
                                     colors = ButtonDefaults.buttonColors(
-                                        containerColor = PrimaryContainer,
-                                        contentColor = OnPrimaryContainer
+                                        containerColor = CozyLeafGreen,
+                                        contentColor = Color.White
                                     ),
-                                    shape = RoundedCornerShape(12.dp)
+                                    shape = RoundedCornerShape(14.dp)
                                 ) {
                                     Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Añadir Asignatura", style = MaterialTheme.typography.labelLarge)
+                                    Text("Añadir Asignatura", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold))
                                 }
                             }
                         }
@@ -322,12 +326,12 @@ fun ScheduleScreen(
         // Floating Action Button
         FloatingActionButton(
             onClick = { showAddDialog = true },
-            containerColor = PrimaryContainer,
-            contentColor = Color.Black,
-            shape = RoundedCornerShape(16.dp),
+            containerColor = CozyLeafGreen,
+            contentColor = Color.White,
+            shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 80.dp)
+                .padding(end = 20.dp, bottom = 86.dp)
                 .testTag("add_schedule_button")
         ) {
             Row(
@@ -374,8 +378,8 @@ fun ScheduleScreen(
             ModalBottomSheet(
                 onDismissRequest = { selectedItemForAction = null },
                 sheetState = sheetState,
-                containerColor = SurfaceDark,
-                contentColor = OnSurface
+                containerColor = CozyCreamBg,
+                contentColor = CozyCocoaText
             ) {
                 Column(
                     modifier = Modifier
@@ -384,14 +388,13 @@ fun ScheduleScreen(
                 ) {
                     Text(
                         text = item.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = OnSurface,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = CozyForestDark
                     )
                     Text(
                         text = "${item.startTime} - ${item.endTime} ${if (item.location.isNotEmpty()) "• " + item.location else ""}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = OnSurfaceVariant,
+                        color = CozyCocoaMuted,
                         modifier = Modifier.padding(top = 4.dp)
                     )
 
@@ -406,15 +409,15 @@ fun ScheduleScreen(
                                 onStartPomodoroForClass(title, dur)
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = PrimaryContainer,
-                                contentColor = OnPrimaryContainer
+                                containerColor = CozyLeafGreen,
+                                contentColor = Color.White
                             ),
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(14.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Icon(Icons.Filled.Timer, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Iniciar Temporizador Pomodoro")
+                            Text("Iniciar Temporizador Pomodoro", fontWeight = FontWeight.Bold)
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
@@ -428,15 +431,16 @@ fun ScheduleScreen(
                             scheduleToEdit = toEdit
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = SurfaceContainerHigh,
-                            contentColor = OnSurface
+                            containerColor = CozyCardBg,
+                            contentColor = CozyCocoaText
                         ),
-                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(Icons.Filled.Edit, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Editar Asignatura")
+                        Text("Editar Asignatura", fontWeight = FontWeight.SemiBold)
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -448,15 +452,15 @@ fun ScheduleScreen(
                             selectedItemForAction = null
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = SurfaceContainer,
-                            contentColor = AccentRose
+                            containerColor = CozyPeachContainer,
+                            contentColor = CozyPeach
                         ),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(Icons.Filled.Delete, contentDescription = null, tint = AccentRose, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Filled.Delete, contentDescription = null, tint = CozyPeach, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Eliminar del Horario")
+                        Text("Eliminar del Horario", fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -489,13 +493,13 @@ fun ScheduleTimelineRow(
         ) {
             Text(
                 text = item.startTime,
-                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp, fontWeight = FontWeight.SemiBold),
-                color = OnSurface
+                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold),
+                color = CozyCocoaText
             )
             Text(
                 text = item.endTime,
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                color = OutlineColor
+                color = CozyCocoaMuted
             )
         }
 
@@ -510,10 +514,10 @@ fun ScheduleTimelineRow(
             Box(
                 modifier = Modifier
                     .padding(top = 12.dp)
-                    .size(14.dp)
+                    .size(16.dp)
                     .clip(CircleShape)
-                    .background(SurfaceDark)
-                    .border(2.dp, if (item.isRecess) OutlineColor else nodeColor, CircleShape),
+                    .background(CozyCardBg)
+                    .border(2.5.dp, if (item.isRecess) CozyCocoaMuted else nodeColor, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 if (!item.isRecess) {
@@ -532,7 +536,7 @@ fun ScheduleTimelineRow(
                     modifier = Modifier
                         .width(2.dp)
                         .weight(1f)
-                        .background(SurfaceContainer)
+                        .background(CozyBorder)
                 )
             } else {
                 Spacer(modifier = Modifier.weight(1f))
@@ -548,9 +552,9 @@ fun ScheduleTimelineRow(
             if (item.isRecess) {
                 // Recess Bar
                 Surface(
-                    shape = RoundedCornerShape(10.dp),
-                    color = SurfaceContainer.copy(alpha = 0.5f),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, OutlineVariant.copy(alpha = 0.3f)),
+                    shape = RoundedCornerShape(16.dp),
+                    color = CozyCardAlt,
+                    border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorderSubtle),
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onItemClick() }
@@ -562,23 +566,24 @@ fun ScheduleTimelineRow(
                         Icon(
                             imageVector = Icons.Filled.Coffee,
                             contentDescription = "Receso",
-                            tint = OutlineColor,
+                            tint = CozyCocoaMuted,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Receso (${item.startTime} - ${item.endTime})",
-                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
-                            color = OutlineColor
+                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp, fontWeight = FontWeight.Medium),
+                            color = CozyCocoaMuted
                         )
                     }
                 }
             } else {
                 // Regular Class Card
-                Card(
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+                Surface(
+                    shape = RoundedCornerShape(18.dp),
+                    color = CozyCardBg,
+                    border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
+                    shadowElevation = 1.dp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onItemClick() }
@@ -587,15 +592,15 @@ fun ScheduleTimelineRow(
                         // Left color accent
                         Box(
                             modifier = Modifier
-                                .width(4.dp)
-                                .height(82.dp)
+                                .width(5.dp)
+                                .height(84.dp)
                                 .background(nodeColor)
                         )
 
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = 14.dp, vertical = 10.dp)
+                                .padding(horizontal = 14.dp, vertical = 12.dp)
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -604,21 +609,20 @@ fun ScheduleTimelineRow(
                             ) {
                                 Text(
                                     text = item.title,
-                                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp),
-                                    color = OnSurface,
-                                    fontWeight = FontWeight.SemiBold,
+                                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp, fontWeight = FontWeight.Bold),
+                                    color = CozyCocoaText,
                                     modifier = Modifier.weight(1f)
                                 )
                                 if (item.instructorOrTag.isNotEmpty()) {
                                     Surface(
-                                        shape = RoundedCornerShape(6.dp),
+                                        shape = RoundedCornerShape(8.dp),
                                         color = nodeColor.copy(alpha = 0.15f)
                                     ) {
                                         Text(
                                             text = item.instructorOrTag,
-                                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+                                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.SemiBold),
                                             color = nodeColor,
-                                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
                                         )
                                     }
                                 }
@@ -636,45 +640,44 @@ fun ScheduleTimelineRow(
                                         Icon(
                                             imageVector = Icons.Filled.LocationOn,
                                             contentDescription = null,
-                                            tint = OutlineColor,
+                                            tint = CozyCocoaMuted,
                                             modifier = Modifier.size(13.dp)
                                         )
                                         Spacer(modifier = Modifier.width(4.dp))
                                         Text(
                                             text = item.location,
                                             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                                            color = OutlineColor
+                                            color = CozyCocoaMuted
                                         )
                                     }
                                 } else {
                                     Text(
                                         text = "${item.startTime} - ${item.endTime}",
                                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                                        color = OutlineColor
+                                        color = CozyCocoaMuted
                                     )
                                 }
 
                                 // Quick focus chip
                                 Box(
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(6.dp))
-                                        .background(PrimaryContainer.copy(alpha = 0.15f))
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(CozyLeafGreenContainer)
                                         .clickable { onStartFocus() }
-                                        .padding(horizontal = 8.dp, vertical = 3.dp)
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(
                                             imageVector = Icons.Filled.PlayArrow,
                                             contentDescription = "Enfocar",
-                                            tint = PrimaryIndigo,
+                                            tint = CozyForestDark,
                                             modifier = Modifier.size(12.dp)
                                         )
                                         Spacer(modifier = Modifier.width(2.dp))
                                         Text(
                                             text = "Enfocar",
-                                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                                            color = PrimaryIndigo,
-                                            fontWeight = FontWeight.SemiBold
+                                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                                            color = CozyForestDark
                                         )
                                     }
                                 }
@@ -686,3 +689,4 @@ fun ScheduleTimelineRow(
         }
     }
 }
+

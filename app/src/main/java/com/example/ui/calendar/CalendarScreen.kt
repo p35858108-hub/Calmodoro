@@ -89,22 +89,30 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.local.entity.TaskEntity
 import com.example.ui.components.AddTaskDialog
+import androidx.compose.material.icons.filled.Eco
+import androidx.compose.material.icons.filled.Spa
 import com.example.ui.theme.AccentAmber
 import com.example.ui.theme.AccentEmerald
 import com.example.ui.theme.AccentIndigo
 import com.example.ui.theme.AccentRose
 import com.example.ui.theme.AccentTeal
-import com.example.ui.theme.BackgroundDark
-import com.example.ui.theme.OnPrimaryContainer
-import com.example.ui.theme.OnSurface
-import com.example.ui.theme.OnSurfaceVariant
-import com.example.ui.theme.OutlineColor
-import com.example.ui.theme.OutlineVariant
-import com.example.ui.theme.PrimaryContainer
-import com.example.ui.theme.PrimaryIndigo
-import com.example.ui.theme.SurfaceContainer
-import com.example.ui.theme.SurfaceContainerHigh
-import com.example.ui.theme.SurfaceDark
+import com.example.ui.theme.CozyBorder
+import com.example.ui.theme.CozyBorderSubtle
+import com.example.ui.theme.CozyCardAlt
+import com.example.ui.theme.CozyCardBg
+import com.example.ui.theme.CozyCocoaMuted
+import com.example.ui.theme.CozyCocoaText
+import com.example.ui.theme.CozyCreamBg
+import com.example.ui.theme.CozyForestDark
+import com.example.ui.theme.CozyHoney
+import com.example.ui.theme.CozyHoneyContainer
+import com.example.ui.theme.CozyLeafGreen
+import com.example.ui.theme.CozyLeafGreenContainer
+import com.example.ui.theme.CozyPeach
+import com.example.ui.theme.CozyPeachContainer
+import com.example.ui.theme.CozySky
+import com.example.ui.theme.CozySkyContainer
+import com.example.data.local.entity.matchesDate
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -154,7 +162,7 @@ fun CalendarScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundDark)
+            .background(CozyCreamBg)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -163,8 +171,8 @@ fun CalendarScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(BackgroundDark)
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
+                    .background(CozyCreamBg)
+                    .padding(horizontal = 18.dp, vertical = 12.dp)
             ) {
                 // View Selector (Día | Semana | Mes) & Schedule Button
                 Row(
@@ -175,9 +183,10 @@ fun CalendarScreen(
                     // Day / Week / Month Segmented Selector
                     Row(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(SurfaceContainer)
-                            .padding(2.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(CozyCardBg)
+                            .border(1.5.dp, CozyBorder, RoundedCornerShape(14.dp))
+                            .padding(3.dp)
                     ) {
                         listOf(
                             CalendarViewMode.DAY to "Día",
@@ -187,18 +196,18 @@ fun CalendarScreen(
                             val isSelected = viewMode == mode
                             Box(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isSelected) PrimaryContainer else Color.Transparent)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(if (isSelected) CozyLeafGreen else Color.Transparent)
                                     .clickable { viewModel.setViewMode(mode) }
-                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                                    .padding(horizontal = 12.dp, vertical = 7.dp)
                             ) {
                                 Text(
                                     text = label,
                                     style = MaterialTheme.typography.labelMedium.copy(
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                         fontSize = 12.sp
                                     ),
-                                    color = if (isSelected) OnPrimaryContainer else OnSurfaceVariant
+                                    color = if (isSelected) Color.White else CozyCocoaText
                                 )
                             }
                         }
@@ -206,32 +215,32 @@ fun CalendarScreen(
 
                     // Button to jump to Weekly Schedule
                     Surface(
-                        shape = RoundedCornerShape(10.dp),
-                        color = SurfaceContainerHigh,
-                        border = androidx.compose.foundation.BorderStroke(1.dp, OutlineVariant.copy(alpha = 0.5f)),
+                        shape = RoundedCornerShape(14.dp),
+                        color = CozyHoneyContainer,
+                        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyHoney.copy(alpha = 0.4f)),
                         modifier = Modifier.clickable { onNavigateToSchedule() }
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.DateRange,
                                 contentDescription = "Horario",
-                                tint = PrimaryIndigo,
+                                tint = CozyForestDark,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
                                 text = "Horario",
-                                color = PrimaryIndigo,
-                                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
+                                color = CozyForestDark,
+                                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Navigation Header depending on View Mode
                 when (viewMode) {
@@ -242,44 +251,49 @@ fun CalendarScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text(
-                                    text = titleMain,
-                                    style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp),
-                                    color = OnSurface,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = titleMain,
+                                        style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+                                        color = CozyForestDark
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(18.dp))
+                                }
                                 Text(
                                     text = titleSubtitle,
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = OutlineColor
+                                    color = CozyCocoaMuted
                                 )
                             }
 
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 IconButton(
                                     onClick = { viewModel.previousDay() },
                                     modifier = Modifier
-                                        .size(36.dp)
+                                        .size(38.dp)
                                         .clip(CircleShape)
-                                        .background(SurfaceContainer)
+                                        .background(CozyCardBg)
+                                        .border(1.5.dp, CozyBorder, CircleShape)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronLeft,
                                         contentDescription = "Día anterior",
-                                        tint = OnSurface
+                                        tint = CozyCocoaText
                                     )
                                 }
                                 IconButton(
                                     onClick = { viewModel.nextDay() },
                                     modifier = Modifier
-                                        .size(36.dp)
+                                        .size(38.dp)
                                         .clip(CircleShape)
-                                        .background(SurfaceContainer)
+                                        .background(CozyCardBg)
+                                        .border(1.5.dp, CozyBorder, CircleShape)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronRight,
                                         contentDescription = "Día siguiente",
-                                        tint = OnSurface
+                                        tint = CozyCocoaText
                                     )
                                 }
                             }
@@ -293,44 +307,49 @@ fun CalendarScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = "Vista Semanal",
+                                        style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+                                        color = CozyForestDark
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(18.dp))
+                                }
                                 Text(
-                                    text = "Vista Semanal",
-                                    style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp),
-                                    color = OnSurface,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Selecciona un día de la semana",
+                                    text = "Toca un día para ver sus tareas",
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = OutlineColor
+                                    color = CozyCocoaMuted
                                 )
                             }
 
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 IconButton(
                                     onClick = { viewModel.previousWeek() },
                                     modifier = Modifier
-                                        .size(36.dp)
+                                        .size(38.dp)
                                         .clip(CircleShape)
-                                        .background(SurfaceContainer)
+                                        .background(CozyCardBg)
+                                        .border(1.5.dp, CozyBorder, CircleShape)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronLeft,
                                         contentDescription = "Semana anterior",
-                                        tint = OnSurface
+                                        tint = CozyCocoaText
                                     )
                                 }
                                 IconButton(
                                     onClick = { viewModel.nextWeek() },
                                     modifier = Modifier
-                                        .size(36.dp)
+                                        .size(38.dp)
                                         .clip(CircleShape)
-                                        .background(SurfaceContainer)
+                                        .background(CozyCardBg)
+                                        .border(1.5.dp, CozyBorder, CircleShape)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronRight,
                                         contentDescription = "Semana siguiente",
-                                        tint = OnSurface
+                                        tint = CozyCocoaText
                                     )
                                 }
                             }
@@ -344,44 +363,49 @@ fun CalendarScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = viewModel.getFormattedMonthTitle(viewingMonthCal),
+                                        style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+                                        color = CozyForestDark
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(18.dp))
+                                }
                                 Text(
-                                    text = viewModel.getFormattedMonthTitle(viewingMonthCal),
-                                    style = MaterialTheme.typography.headlineMedium.copy(fontSize = 22.sp),
-                                    color = OnSurface,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Calendario Mensual",
+                                    text = "Calendario Mensual de la Isla",
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = OutlineColor
+                                    color = CozyCocoaMuted
                                 )
                             }
 
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 IconButton(
                                     onClick = { viewModel.previousMonth() },
                                     modifier = Modifier
-                                        .size(36.dp)
+                                        .size(38.dp)
                                         .clip(CircleShape)
-                                        .background(SurfaceContainer)
+                                        .background(CozyCardBg)
+                                        .border(1.5.dp, CozyBorder, CircleShape)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronLeft,
                                         contentDescription = "Mes anterior",
-                                        tint = OnSurface
+                                        tint = CozyCocoaText
                                     )
                                 }
                                 IconButton(
                                     onClick = { viewModel.nextMonth() },
                                     modifier = Modifier
-                                        .size(36.dp)
+                                        .size(38.dp)
                                         .clip(CircleShape)
-                                        .background(SurfaceContainer)
+                                        .background(CozyCardBg)
+                                        .border(1.5.dp, CozyBorder, CircleShape)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.ChevronRight,
                                         contentDescription = "Mes siguiente",
-                                        tint = OnSurface
+                                        tint = CozyCocoaText
                                     )
                                 }
                             }
@@ -389,7 +413,7 @@ fun CalendarScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Filter Chips (Todas / Pendientes / Completadas)
                 Row(
@@ -402,57 +426,60 @@ fun CalendarScreen(
                     FilterChip(
                         selected = activeFilter == TaskFilter.ALL,
                         onClick = { activeFilter = TaskFilter.ALL },
-                        label = { Text("Todas (${currentTasks.size})", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("Todas (${currentTasks.size})", style = MaterialTheme.typography.labelSmall.copy(fontWeight = if (activeFilter == TaskFilter.ALL) FontWeight.Bold else FontWeight.Medium)) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = PrimaryContainer,
-                            selectedLabelColor = OnPrimaryContainer,
-                            containerColor = SurfaceDark,
-                            labelColor = OnSurfaceVariant
+                            selectedContainerColor = CozyLeafGreen,
+                            selectedLabelColor = Color.White,
+                            containerColor = CozyCardBg,
+                            labelColor = CozyCocoaText
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            borderColor = if (activeFilter == TaskFilter.ALL) PrimaryContainer else SurfaceContainer,
+                            borderColor = if (activeFilter == TaskFilter.ALL) CozyLeafGreen else CozyBorder,
                             enabled = true,
                             selected = activeFilter == TaskFilter.ALL
-                        )
+                        ),
+                        shape = RoundedCornerShape(12.dp)
                     )
 
                     FilterChip(
                         selected = activeFilter == TaskFilter.PENDING,
                         onClick = { activeFilter = TaskFilter.PENDING },
-                        label = { Text("Pendientes ($pendingCount)", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("Pendientes ($pendingCount)", style = MaterialTheme.typography.labelSmall.copy(fontWeight = if (activeFilter == TaskFilter.PENDING) FontWeight.Bold else FontWeight.Medium)) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = PrimaryContainer,
-                            selectedLabelColor = OnPrimaryContainer,
-                            containerColor = SurfaceDark,
-                            labelColor = OnSurfaceVariant
+                            selectedContainerColor = CozyLeafGreen,
+                            selectedLabelColor = Color.White,
+                            containerColor = CozyCardBg,
+                            labelColor = CozyCocoaText
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            borderColor = if (activeFilter == TaskFilter.PENDING) PrimaryContainer else SurfaceContainer,
+                            borderColor = if (activeFilter == TaskFilter.PENDING) CozyLeafGreen else CozyBorder,
                             enabled = true,
                             selected = activeFilter == TaskFilter.PENDING
-                        )
+                        ),
+                        shape = RoundedCornerShape(12.dp)
                     )
 
                     FilterChip(
                         selected = activeFilter == TaskFilter.COMPLETED,
                         onClick = { activeFilter = TaskFilter.COMPLETED },
-                        label = { Text("Completadas ($completedCount)", style = MaterialTheme.typography.labelSmall) },
+                        label = { Text("Completadas ($completedCount)", style = MaterialTheme.typography.labelSmall.copy(fontWeight = if (activeFilter == TaskFilter.COMPLETED) FontWeight.Bold else FontWeight.Medium)) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = PrimaryContainer,
-                            selectedLabelColor = OnPrimaryContainer,
-                            containerColor = SurfaceDark,
-                            labelColor = OnSurfaceVariant
+                            selectedContainerColor = CozyLeafGreen,
+                            selectedLabelColor = Color.White,
+                            containerColor = CozyCardBg,
+                            labelColor = CozyCocoaText
                         ),
                         border = FilterChipDefaults.filterChipBorder(
-                            borderColor = if (activeFilter == TaskFilter.COMPLETED) PrimaryContainer else SurfaceContainer,
+                            borderColor = if (activeFilter == TaskFilter.COMPLETED) CozyLeafGreen else CozyBorder,
                             enabled = true,
                             selected = activeFilter == TaskFilter.COMPLETED
-                        )
+                        ),
+                        shape = RoundedCornerShape(12.dp)
                     )
                 }
             }
 
-            HorizontalDivider(color = SurfaceContainer.copy(alpha = 0.5f), thickness = 1.dp)
+            HorizontalDivider(color = CozyBorderSubtle, thickness = 1.dp)
 
             // Body Content based on View Mode
             when (viewMode) {
@@ -500,7 +527,7 @@ fun CalendarScreen(
             onClick = { showAddDialog = true },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 80.dp)
+                .padding(end = 20.dp, bottom = 86.dp)
                 .testTag("new_task_button")
         )
 
@@ -535,8 +562,8 @@ fun CalendarScreen(
             ModalBottomSheet(
                 onDismissRequest = { selectedTaskForAction = null },
                 sheetState = sheetState,
-                containerColor = SurfaceDark,
-                contentColor = OnSurface
+                containerColor = CozyCreamBg,
+                contentColor = CozyCocoaText
             ) {
                 Column(
                     modifier = Modifier
@@ -550,32 +577,32 @@ fun CalendarScreen(
                     ) {
                         Text(
                             text = task.title,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = OnSurface,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = CozyForestDark,
                             modifier = Modifier.weight(1f)
                         )
                         if (task.isFixed) {
                             Surface(
                                 shape = RoundedCornerShape(8.dp),
-                                color = AccentAmber.copy(alpha = 0.2f),
+                                color = CozyHoneyContainer,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, CozyHoney.copy(alpha = 0.4f)),
                                 modifier = Modifier.padding(start = 8.dp)
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Filled.PushPin,
                                         contentDescription = "Fijada",
-                                        tint = AccentAmber,
+                                        tint = CozyHoney,
                                         modifier = Modifier.size(12.dp)
                                     )
-                                    Spacer(modifier = Modifier.width(3.dp))
+                                    Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = "Fijada",
-                                        color = AccentAmber,
-                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                        color = CozyForestDark,
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                     )
                                 }
                             }
@@ -586,7 +613,7 @@ fun CalendarScreen(
                         Text(
                             text = task.description,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = OnSurfaceVariant,
+                            color = CozyCocoaMuted,
                             modifier = Modifier.padding(top = 4.dp)
                         )
                     }
@@ -597,7 +624,7 @@ fun CalendarScreen(
                     ) {
                         Text(
                             text = "${task.date} • ${task.startTime} - ${task.endTime} (${task.durationMinutes} min)",
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                             color = parseColor(task.colorHex)
                         )
 
@@ -606,14 +633,14 @@ fun CalendarScreen(
                             Icon(
                                 imageVector = Icons.Filled.Alarm,
                                 contentDescription = "Alarmas",
-                                tint = PrimaryContainer,
+                                tint = CozyLeafGreen,
                                 modifier = Modifier.size(14.dp)
                             )
                             Spacer(modifier = Modifier.width(2.dp))
                             Text(
                                 text = if (task.notifyOnStart && task.notifyOnEnd) "Aviso inicio/fin" else if (task.notifyOnStart) "Aviso inicio" else "Aviso fin",
-                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                                color = PrimaryContainer
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold),
+                                color = CozyForestDark
                             )
                         }
                     }
@@ -628,15 +655,15 @@ fun CalendarScreen(
                             onStartPomodoroForTask(target)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = PrimaryContainer,
-                            contentColor = OnPrimaryContainer
+                            containerColor = CozyLeafGreen,
+                            contentColor = Color.White
                         ),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(Icons.Filled.Timer, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Iniciar Pomodoro con esta tarea")
+                        Text("Iniciar Pomodoro con esta tarea", fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -648,20 +675,21 @@ fun CalendarScreen(
                             selectedTaskForAction = null
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = SurfaceContainerHigh,
-                            contentColor = OnSurface
+                            containerColor = CozyCardBg,
+                            contentColor = CozyCocoaText
                         ),
-                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
                             if (task.isCompleted) Icons.Filled.RadioButtonUnchecked else Icons.Filled.CheckCircle,
                             contentDescription = null,
-                            tint = if (task.isCompleted) OnSurfaceVariant else AccentEmerald,
+                            tint = if (task.isCompleted) CozyCocoaMuted else CozyLeafGreen,
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(if (task.isCompleted) "Marcar como pendiente" else "Marcar como completada")
+                        Text(if (task.isCompleted) "Marcar como pendiente" else "Marcar como completada", fontWeight = FontWeight.SemiBold)
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -674,15 +702,16 @@ fun CalendarScreen(
                             taskToEdit = toEdit
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = SurfaceContainerHigh,
-                            contentColor = OnSurface
+                            containerColor = CozyCardBg,
+                            contentColor = CozyCocoaText
                         ),
-                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(Icons.Filled.Edit, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Editar Tarea")
+                        Text("Editar Tarea", fontWeight = FontWeight.SemiBold)
                     }
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -694,15 +723,15 @@ fun CalendarScreen(
                             selectedTaskForAction = null
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = SurfaceContainer,
-                            contentColor = AccentRose
+                            containerColor = CozyPeachContainer,
+                            contentColor = CozyPeach
                         ),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(Icons.Filled.Delete, contentDescription = null, tint = AccentRose, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Filled.Delete, contentDescription = null, tint = CozyPeach, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Eliminar Tarea")
+                        Text("Eliminar Tarea", fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -711,7 +740,6 @@ fun CalendarScreen(
         }
     }
 }
-
 @Composable
 fun DayTimelineView(
     tasks: List<TaskEntity>,
@@ -790,9 +818,9 @@ fun WeekCalendarView(
     ) {
         // Week Days Strip
         Surface(
-            color = SurfaceDark,
-            shape = RoundedCornerShape(18.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            color = CozyCardBg,
+            shape = RoundedCornerShape(20.dp),
+            border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp)
@@ -810,43 +838,43 @@ fun WeekCalendarView(
                             dayCal.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR)
 
                     val iso = sdfIso.format(dayCal.time)
-                    val countForDay = allTasks.count { it.date == iso }
+                    val countForDay = allTasks.count { it.matchesDate(iso, dayCal) }
 
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(if (isSelected) PrimaryContainer else if (isToday) SurfaceContainerHigh else Color.Transparent)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(if (isSelected) CozyLeafGreen else if (isToday) CozyHoneyContainer else Color.Transparent)
                             .border(
-                                width = if (isToday && !isSelected) 1.dp else 0.dp,
-                                color = if (isToday && !isSelected) PrimaryContainer else Color.Transparent,
-                                shape = RoundedCornerShape(12.dp)
+                                width = if (isToday && !isSelected) 1.5.dp else 0.dp,
+                                color = if (isToday && !isSelected) CozyHoney else Color.Transparent,
+                                shape = RoundedCornerShape(14.dp)
                             )
                             .clickable { onSelectDate(dayCal) }
-                            .padding(horizontal = 8.dp, vertical = 8.dp)
+                            .padding(horizontal = 10.dp, vertical = 8.dp)
                     ) {
                         Text(
                             text = dayNames[index],
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                            color = if (isSelected) OnPrimaryContainer else OnSurfaceVariant
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold),
+                            color = if (isSelected) Color.White else CozyCocoaMuted
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = "${dayCal.get(Calendar.DAY_OF_MONTH)}",
                             style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal,
+                                fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Medium,
                                 fontSize = 15.sp
                             ),
-                            color = if (isSelected) OnPrimaryContainer else OnSurface
+                            color = if (isSelected) Color.White else CozyForestDark
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        // Task count dot or count
+                        // Task count dot
                         if (countForDay > 0) {
                             Box(
                                 modifier = Modifier
                                     .size(6.dp)
                                     .clip(CircleShape)
-                                    .background(if (isSelected) Color.Black else PrimaryContainer)
+                                    .background(if (isSelected) Color.White else CozyLeafGreen)
                             )
                         } else {
                             Spacer(modifier = Modifier.size(6.dp))
@@ -874,13 +902,20 @@ fun WeekCalendarView(
                 Text(
                     text = headerText,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = OnSurface
+                    color = CozyForestDark
                 )
-                Text(
-                    text = "${dayTasks.size} tareas",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = OnSurfaceVariant
-                )
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = CozyHoneyContainer,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, CozyHoney.copy(alpha = 0.4f))
+                ) {
+                    Text(
+                        text = "${dayTasks.size} tareas",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = CozyForestDark,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -954,14 +989,14 @@ fun MonthCalendarView(
     ) {
         // Month Grid Surface
         Surface(
-            color = SurfaceDark,
-            shape = RoundedCornerShape(20.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            color = CozyCardBg,
+            shape = RoundedCornerShape(22.dp),
+            border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
+            Column(modifier = Modifier.padding(14.dp)) {
                 // Day of Week Header
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -971,14 +1006,14 @@ fun MonthCalendarView(
                         Text(
                             text = header,
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                            color = OnSurfaceVariant,
+                            color = CozyForestDark,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.width(36.dp)
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // 6 rows of 7 days
                 for (row in 0 until 6) {
@@ -994,17 +1029,17 @@ fun MonthCalendarView(
                             val isToday = cell.cal.get(Calendar.YEAR) == todayCal.get(Calendar.YEAR) &&
                                     cell.cal.get(Calendar.DAY_OF_YEAR) == todayCal.get(Calendar.DAY_OF_YEAR)
 
-                            val tasksInCell = allTasks.filter { it.date == cellIso }
+                            val tasksInCell = allTasks.filter { it.matchesDate(cellIso, cell.cal) }
 
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
                                     .size(38.dp)
                                     .clip(CircleShape)
-                                    .background(if (isSelected) PrimaryContainer else if (isToday) SurfaceContainerHigh else Color.Transparent)
+                                    .background(if (isSelected) CozyLeafGreen else if (isToday) CozyHoneyContainer else Color.Transparent)
                                     .border(
-                                        width = if (isToday && !isSelected) 1.dp else 0.dp,
-                                        color = if (isToday && !isSelected) PrimaryContainer else Color.Transparent,
+                                        width = if (isToday && !isSelected) 1.5.dp else 0.dp,
+                                        color = if (isToday && !isSelected) CozyHoney else Color.Transparent,
                                         shape = CircleShape
                                     )
                                     .clickable { onSelectDate(cell.cal) }
@@ -1013,10 +1048,10 @@ fun MonthCalendarView(
                                     Text(
                                         text = "${cell.cal.get(Calendar.DAY_OF_MONTH)}",
                                         style = MaterialTheme.typography.bodySmall.copy(
-                                            fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal,
+                                            fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Medium,
                                             fontSize = 13.sp
                                         ),
-                                        color = if (isSelected) OnPrimaryContainer else if (cell.isCurrentMonth) OnSurface else OnSurfaceVariant.copy(alpha = 0.35f)
+                                        color = if (isSelected) Color.White else if (cell.isCurrentMonth) CozyCocoaText else CozyCocoaMuted.copy(alpha = 0.4f)
                                     )
                                     if (tasksInCell.isNotEmpty()) {
                                         Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -1025,7 +1060,7 @@ fun MonthCalendarView(
                                                     modifier = Modifier
                                                         .size(4.dp)
                                                         .clip(CircleShape)
-                                                        .background(if (isSelected) Color.Black else parseColor(t.colorHex))
+                                                        .background(if (isSelected) Color.White else parseColor(t.colorHex))
                                                 )
                                             }
                                         }
@@ -1034,7 +1069,7 @@ fun MonthCalendarView(
                             }
                         }
                     }
-                    if (row < 5) Spacer(modifier = Modifier.height(4.dp))
+                    if (row < 5) Spacer(modifier = Modifier.height(6.dp))
                 }
             }
         }
@@ -1057,13 +1092,20 @@ fun MonthCalendarView(
                 Text(
                     text = headerText,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = OnSurface
+                    color = CozyForestDark
                 )
-                Text(
-                    text = "${dayTasks.size} tareas",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = OnSurfaceVariant
-                )
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = CozyHoneyContainer,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, CozyHoney.copy(alpha = 0.4f))
+                ) {
+                    Text(
+                        text = "${dayTasks.size} tareas",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                        color = CozyForestDark,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -1102,9 +1144,9 @@ fun TaskCardItem(
     val taskIcon = getTaskIcon(task.iconName)
 
     Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = CozyCardBg),
+        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onTaskClicked() }
@@ -1123,7 +1165,7 @@ fun TaskCardItem(
                 Icon(
                     imageVector = if (task.isCompleted) Icons.Filled.CheckCircle else Icons.Filled.RadioButtonUnchecked,
                     contentDescription = if (task.isCompleted) "Completada" else "Pendiente",
-                    tint = if (task.isCompleted) AccentEmerald else OutlineColor,
+                    tint = if (task.isCompleted) CozyLeafGreen else CozyCocoaMuted,
                     modifier = Modifier.size(22.dp)
                 )
             }
@@ -1143,8 +1185,8 @@ fun TaskCardItem(
                     ) {
                         Text(
                             text = task.title,
-                            style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp, fontWeight = FontWeight.SemiBold),
-                            color = if (task.isCompleted) OnSurfaceVariant else OnSurface,
+                            style = MaterialTheme.typography.titleMedium.copy(fontSize = 15.sp, fontWeight = FontWeight.Bold),
+                            color = if (task.isCompleted) CozyCocoaMuted else CozyForestDark,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
@@ -1154,24 +1196,72 @@ fun TaskCardItem(
                             Icon(
                                 imageVector = Icons.Filled.PushPin,
                                 contentDescription = "Tarea Fija",
-                                tint = AccentAmber,
+                                tint = CozyHoney,
                                 modifier = Modifier.size(14.dp)
                             )
                         }
+                        if (task.repeatMode == "DAILY") {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = CozyHoneyContainer
+                            ) {
+                                Text(
+                                    text = "Cada día",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                                    color = CozyForestDark,
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                        } else if (task.repeatMode == "WEEKLY") {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = CozySkyContainer
+                            ) {
+                                Text(
+                                    text = "Semanal",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                                    color = CozyForestDark,
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                        } else if (task.repeatMode == "WEEKDAYS") {
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = CozyLeafGreenContainer
+                            ) {
+                                Text(
+                                    text = "Lun-Vie",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                                    color = CozyForestDark,
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
                     }
-                    Icon(
-                        imageVector = taskIcon,
-                        contentDescription = null,
-                        tint = categoryColor,
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = categoryColor.copy(alpha = 0.15f),
+                        modifier = Modifier.size(28.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = taskIcon,
+                                contentDescription = null,
+                                tint = categoryColor,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
                 }
 
                 if (task.description.isNotEmpty()) {
                     Text(
                         text = task.description,
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
-                        color = OutlineColor,
+                        color = CozyCocoaMuted,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(top = 2.dp)
@@ -1191,29 +1281,30 @@ fun TaskCardItem(
                     ) {
                         if (task.tag.isNotEmpty()) {
                             Surface(
-                                shape = RoundedCornerShape(4.dp),
-                                color = categoryColor.copy(alpha = 0.15f)
+                                shape = RoundedCornerShape(6.dp),
+                                color = categoryColor.copy(alpha = 0.15f),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, categoryColor.copy(alpha = 0.3f))
                             ) {
                                 Text(
                                     text = task.tag,
-                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
                                     color = categoryColor,
-                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                                 )
                             }
                         }
 
                         Text(
                             text = "${task.startTime} - ${task.endTime} • ${task.durationMinutes}m",
-                            style = MaterialTheme.typography.labelMedium.copy(fontSize = 11.sp),
-                            color = OutlineColor
+                            style = MaterialTheme.typography.labelMedium.copy(fontSize = 11.sp, fontWeight = FontWeight.Medium),
+                            color = CozyCocoaMuted
                         )
 
                         if (task.notifyOnStart || task.notifyOnEnd) {
                             Icon(
                                 imageVector = Icons.Filled.Alarm,
                                 contentDescription = "Recordatorio",
-                                tint = PrimaryContainer,
+                                tint = CozyLeafGreen,
                                 modifier = Modifier.size(12.dp)
                             )
                         }
@@ -1222,24 +1313,25 @@ fun TaskCardItem(
                     // Quick start timer chip
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(PrimaryContainer.copy(alpha = 0.15f))
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(CozyLeafGreenContainer)
+                            .border(1.dp, CozyLeafGreen.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
                             .clickable { onStartPomodoro() }
-                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                            .padding(horizontal = 9.dp, vertical = 4.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Filled.Timer,
                                 contentDescription = "Iniciar",
-                                tint = PrimaryIndigo,
+                                tint = CozyForestDark,
                                 modifier = Modifier.size(12.dp)
                             )
-                            Spacer(modifier = Modifier.width(3.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = "Enfocar",
                                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                                color = PrimaryIndigo,
-                                fontWeight = FontWeight.SemiBold
+                                color = CozyForestDark,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -1252,9 +1344,9 @@ fun TaskCardItem(
 @Composable
 fun EmptyTaskCard(onAddNewTask: () -> Unit) {
     Card(
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-        border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = CozyCardBg),
+        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 24.dp)
@@ -1267,44 +1359,44 @@ fun EmptyTaskCard(onAddNewTask: () -> Unit) {
         ) {
             Surface(
                 shape = CircleShape,
-                color = SurfaceContainer,
-                modifier = Modifier.size(64.dp)
+                color = CozyLeafGreenContainer,
+                border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyLeafGreen.copy(alpha = 0.3f)),
+                modifier = Modifier.size(68.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        imageVector = Icons.Filled.Schedule,
+                        imageVector = Icons.Filled.Spa,
                         contentDescription = null,
-                        tint = PrimaryIndigo,
-                        modifier = Modifier.size(32.dp)
+                        tint = CozyLeafGreen,
+                        modifier = Modifier.size(34.dp)
                     )
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Sin tareas para esta fecha",
-                style = MaterialTheme.typography.titleMedium,
-                color = OnSurface,
-                fontWeight = FontWeight.Bold
+                text = "¡Día libre o sin tareas!",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold, fontSize = 18.sp),
+                color = CozyForestDark
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Pulsa el botón para planificar una tarea o rutina.",
+                text = "Tómate un respiro en la isla o añade una nueva actividad.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = OnSurfaceVariant,
+                color = CozyCocoaMuted,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(18.dp))
             Button(
                 onClick = onAddNewTask,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = PrimaryContainer,
-                    contentColor = OnPrimaryContainer
+                    containerColor = CozyLeafGreen,
+                    contentColor = Color.White
                 ),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Icon(Icons.Filled.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Crear Tarea", style = MaterialTheme.typography.labelLarge)
+                Text("Crear Actividad", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold))
             }
         }
     }
@@ -1317,14 +1409,14 @@ fun ExtendedFabButton(
 ) {
     FloatingActionButton(
         onClick = onClick,
-        containerColor = PrimaryContainer,
-        contentColor = Color(0xFF000000),
-        shape = RoundedCornerShape(16.dp),
+        containerColor = CozyLeafGreen,
+        contentColor = Color.White,
+        shape = RoundedCornerShape(20.dp),
         modifier = modifier
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Nueva Tarea", modifier = Modifier.size(20.dp))
             Spacer(modifier = Modifier.width(8.dp))

@@ -9,6 +9,8 @@ import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import com.example.audio.AmbientSound
+import com.example.audio.AmbientSoundPlayer
 import com.example.audio.SoundManager
 import com.example.data.local.AppDatabase
 import com.example.data.local.entity.PomodoroSessionEntity
@@ -156,6 +158,9 @@ class PomodoroEngine private constructor(private val context: Context) {
         alreadyElapsedMs = 0L
         startRealtime = 0L
 
+        // Stop any active ambient sound
+        AmbientSoundPlayer.setSound(AmbientSound.NONE)
+
         val totalSec = _stateFlow.value.totalDurationSeconds
         targetDurationMs = totalSec * 1000L
 
@@ -206,10 +211,13 @@ class PomodoroEngine private constructor(private val context: Context) {
         tickerJob?.cancel()
         cancelExactAlarm()
 
+        // Stop any active ambient background noise
+        AmbientSoundPlayer.setSound(AmbientSound.NONE)
+
         val currentState = _stateFlow.value
         val soundChoice = currentState.soundChoice
 
-        // Play finish alarm sound
+        // Play finish alarm sound once
         try {
             SoundManager.getInstance(context).playFinish(soundChoice)
         } catch (e: Exception) {

@@ -15,9 +15,18 @@ object WavAudioGenerator {
     private const val SAMPLE_RATE = 44100
     private const val NUM_CHANNELS = 1
     private const val BITS_PER_SAMPLE = 16
+    private const val AUDIO_VERSION = "calmodoro_audio_v2"
 
     fun ensureSoundFiles(context: Context): Map<String, File> {
         val soundDir = File(context.cacheDir, "sounds").apply { mkdirs() }
+        val versionFile = File(soundDir, "version.txt")
+
+        // Force recreation if older audio files exist
+        if (!versionFile.exists() || versionFile.readText().trim() != AUDIO_VERSION) {
+            soundDir.listFiles()?.forEach { it.delete() }
+            versionFile.writeText(AUDIO_VERSION)
+        }
+
         val soundFiles = mutableMapOf<String, File>()
 
         val filesToGenerate = listOf(
@@ -47,36 +56,39 @@ object WavAudioGenerator {
     }
 
     private fun generateStartTone(): ShortArray {
-        // C5 (523.25 Hz) for 0.15s, then E5 (659.25 Hz) for 0.35s with smooth envelope
-        val durationSec = 0.55
+        // C5 (523.25 Hz) for 0.12s, then E5 (659.25 Hz) for 0.30s with gentle attack and warm envelope
+        val durationSec = 0.45
         val numSamples = (SAMPLE_RATE * durationSec).toInt()
         val samples = ShortArray(numSamples)
 
-        val split = (SAMPLE_RATE * 0.15).toInt()
+        val split = (SAMPLE_RATE * 0.12).toInt()
         for (i in 0 until split) {
             val t = i.toDouble() / SAMPLE_RATE
-            val env = (1.0 - exp(-i / (SAMPLE_RATE * 0.02))) * (1.0 - i.toDouble() / split)
+            val attack = kotlin.math.min(1.0, t / 0.01)
+            val decay = (1.0 - i.toDouble() / split)
+            val env = attack * decay
             val freq = 523.25
-            val s = (sin(2 * PI * freq * t) * 0.7 + sin(2 * PI * freq * 2 * t) * 0.2) * env
-            samples[i] = (s * Short.MAX_VALUE * 0.6).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            val s = (sin(2 * PI * freq * t) * 0.8 + sin(2 * PI * freq * 2 * t) * 0.15) * env
+            samples[i] = (s * Short.MAX_VALUE * 0.5).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
         }
 
         for (i in split until numSamples) {
             val localI = i - split
             val t = localI.toDouble() / SAMPLE_RATE
-            val localDuration = durationSec - 0.15
-            val env = exp(-localI / (SAMPLE_RATE * 0.18))
+            val attack = kotlin.math.min(1.0, t / 0.01)
+            val decay = exp(-localI / (SAMPLE_RATE * 0.14))
+            val env = attack * decay
             val freq = 659.25
-            val s = (sin(2 * PI * freq * t) * 0.75 + sin(2 * PI * freq * 2 * t) * 0.15) * env
-            samples[i] = (s * Short.MAX_VALUE * 0.7).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            val s = (sin(2 * PI * freq * t) * 0.85 + sin(2 * PI * freq * 2 * t) * 0.12) * env
+            samples[i] = (s * Short.MAX_VALUE * 0.55).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
         }
 
         return samples
     }
 
     private fun generatePauseTone(): ShortArray {
-        // Soft descending tone: E5 (659Hz) to C5 (523Hz)
-        val durationSec = 0.4
+        // Soft warm descending tone: E5 (659Hz) to C5 (523Hz)
+        val durationSec = 0.35
         val numSamples = (SAMPLE_RATE * durationSec).toInt()
         val samples = ShortArray(numSamples)
 
@@ -84,37 +96,38 @@ object WavAudioGenerator {
             val t = i.toDouble() / SAMPLE_RATE
             val progress = i.toDouble() / numSamples
             val freq = 659.25 - progress * 136.0
-            val env = exp(-i / (SAMPLE_RATE * 0.12))
-            val s = sin(2 * PI * freq * t) * env
-            samples[i] = (s * Short.MAX_VALUE * 0.5).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            val attack = kotlin.math.min(1.0, t / 0.01)
+            val decay = exp(-i / (SAMPLE_RATE * 0.10))
+            val s = sin(2 * PI * freq * t) * attack * decay
+            samples[i] = (s * Short.MAX_VALUE * 0.45).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
         }
         return samples
     }
 
     private fun generateClickTone(): ShortArray {
-        // Short subtle 15ms click
-        val durationSec = 0.02
+        // Soft 12ms wooden tap
+        val durationSec = 0.015
         val numSamples = (SAMPLE_RATE * durationSec).toInt()
         val samples = ShortArray(numSamples)
         for (i in 0 until numSamples) {
             val t = i.toDouble() / SAMPLE_RATE
             val env = 1.0 - (i.toDouble() / numSamples)
-            val s = sin(2 * PI * 1200.0 * t) * env
-            samples[i] = (s * Short.MAX_VALUE * 0.3).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            val s = sin(2 * PI * 950.0 * t) * env
+            samples[i] = (s * Short.MAX_VALUE * 0.25).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
         }
         return samples
     }
 
     private fun generateDigitalBellTone(): ShortArray {
-        // 3-note ascending chime: C5 (523Hz) -> G5 (784Hz) -> C6 (1046Hz)
-        val durationSec = 1.4
+        // 3-note ascending chime: C5 (523.25Hz) -> G5 (783.99Hz) -> C6 (1046.5Hz)
+        val durationSec = 1.6
         val numSamples = (SAMPLE_RATE * durationSec).toInt()
         val samples = ShortArray(numSamples)
 
         val notes = listOf(
-            Triple(0.00, 523.25, 0.4),
-            Triple(0.20, 783.99, 0.5),
-            Triple(0.45, 1046.50, 0.95)
+            Triple(0.00, 523.25, 0.45),
+            Triple(0.22, 783.99, 0.55),
+            Triple(0.48, 1046.50, 1.05)
         )
 
         for (i in 0 until numSamples) {
@@ -124,12 +137,14 @@ object WavAudioGenerator {
             for ((startT, freq, dur) in notes) {
                 if (t >= startT && t < startT + dur) {
                     val noteT = t - startT
-                    val env = exp(-noteT / (dur * 0.35))
-                    // Pure bell harmonics
-                    val tone = sin(2 * PI * freq * noteT) * 0.6 +
-                            sin(2 * PI * freq * 2.0 * noteT) * 0.25 +
-                            sin(2 * PI * freq * 3.0 * noteT) * 0.1
-                    sampleVal += tone * env * 0.45
+                    val attack = kotlin.math.min(1.0, noteT / 0.012)
+                    val decay = exp(-noteT / (dur * 0.32))
+                    val env = attack * decay
+                    // Pure warm bell harmonics
+                    val tone = sin(2 * PI * freq * noteT) * 0.75 +
+                            sin(2 * PI * freq * 2.0 * noteT) * 0.18 +
+                            sin(2 * PI * freq * 3.0 * noteT) * 0.07
+                    sampleVal += tone * env * 0.38
                 }
             }
             samples[i] = (sampleVal * Short.MAX_VALUE).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
@@ -138,13 +153,13 @@ object WavAudioGenerator {
     }
 
     private fun generateWindChimesTone(): ShortArray {
-        // Pentatonic ethereal chime series
-        val durationSec = 1.6
+        // Pentatonic gentle wind chime cascade
+        val durationSec = 1.8
         val numSamples = (SAMPLE_RATE * durationSec).toInt()
         val samples = ShortArray(numSamples)
 
         val freqs = listOf(587.33, 659.25, 880.0, 987.77, 1174.66)
-        val startTimes = listOf(0.0, 0.15, 0.32, 0.48, 0.65)
+        val startTimes = listOf(0.0, 0.14, 0.30, 0.46, 0.62)
 
         for (i in 0 until numSamples) {
             val t = i.toDouble() / SAMPLE_RATE
@@ -155,9 +170,10 @@ object WavAudioGenerator {
                 val freq = freqs[idx]
                 if (t >= startT) {
                     val noteT = t - startT
-                    val env = exp(-noteT / 0.35)
-                    val tone = sin(2 * PI * freq * noteT) * 0.8 + sin(2 * PI * freq * 2.76 * noteT) * 0.2
-                    sampleVal += tone * env * 0.25
+                    val attack = kotlin.math.min(1.0, noteT / 0.015)
+                    val decay = exp(-noteT / 0.38)
+                    val tone = sin(2 * PI * freq * noteT) * 0.8 + sin(2 * PI * freq * 2.0 * noteT) * 0.15
+                    sampleVal += tone * attack * decay * 0.22
                 }
             }
             samples[i] = (sampleVal * Short.MAX_VALUE).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
@@ -166,36 +182,40 @@ object WavAudioGenerator {
     }
 
     private fun generateLofiTone(): ShortArray {
-        // Warm soft Rhodes / lofi bell chord (Major 7th)
-        val durationSec = 1.5
+        // Warm soft Rhodes jazz chord (Gmaj7)
+        val durationSec = 1.6
         val numSamples = (SAMPLE_RATE * durationSec).toInt()
         val samples = ShortArray(numSamples)
 
-        val chord = listOf(392.0, 493.88, 587.33, 739.99) // G4, B4, D5, F#5
+        val chord = listOf(392.0, 493.88, 587.33, 739.99)
 
         for (i in 0 until numSamples) {
             val t = i.toDouble() / SAMPLE_RATE
-            val env = exp(-t / 0.5) * (1.0 - exp(-t / 0.01))
+            val attack = kotlin.math.min(1.0, t / 0.015)
+            val decay = exp(-t / 0.48)
+            val env = attack * decay
             var sampleVal = 0.0
             for (freq in chord) {
-                sampleVal += sin(2 * PI * freq * t) * 0.25
+                sampleVal += (sin(2 * PI * freq * t) * 0.8 + sin(2 * PI * freq * 2.0 * t) * 0.12) * 0.25
             }
-            samples[i] = (sampleVal * env * Short.MAX_VALUE * 0.8).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            samples[i] = (sampleVal * env * Short.MAX_VALUE * 0.65).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
         }
         return samples
     }
 
     private fun generateMinimalPingTone(): ShortArray {
-        // Sharp high-tech minimal crystal ping (880 Hz)
-        val durationSec = 0.8
+        // Soft crystal glass ping (880 Hz)
+        val durationSec = 0.9
         val numSamples = (SAMPLE_RATE * durationSec).toInt()
         val samples = ShortArray(numSamples)
 
         for (i in 0 until numSamples) {
             val t = i.toDouble() / SAMPLE_RATE
-            val env = exp(-t / 0.15)
-            val s = (sin(2 * PI * 880.0 * t) * 0.8 + sin(2 * PI * 1760.0 * t) * 0.2) * env
-            samples[i] = (s * Short.MAX_VALUE * 0.7).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            val attack = kotlin.math.min(1.0, t / 0.008)
+            val decay = exp(-t / 0.18)
+            val env = attack * decay
+            val s = (sin(2 * PI * 880.0 * t) * 0.85 + sin(2 * PI * 1760.0 * t) * 0.15) * env
+            samples[i] = (s * Short.MAX_VALUE * 0.55).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
         }
         return samples
     }

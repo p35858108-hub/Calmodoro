@@ -26,7 +26,7 @@ object TaskAlarmScheduler {
 
         // 1. Schedule Start Alarm if requested
         if (task.notifyOnStart) {
-            val startMillis = parseDateTimeToMillis(task.date, task.startTime)
+            val startMillis = getNextAlarmTimeMillis(task.date, task.startTime, task.repeatMode)
             if (startMillis > System.currentTimeMillis()) {
                 val intent = Intent(context, AlarmReceiver::class.java).apply {
                     action = ACTION_TASK_START
@@ -64,7 +64,7 @@ object TaskAlarmScheduler {
 
         // 2. Schedule End Alarm if requested
         if (task.notifyOnEnd) {
-            val endMillis = parseDateTimeToMillis(task.date, task.endTime)
+            val endMillis = getNextAlarmTimeMillis(task.date, task.endTime, task.repeatMode)
             if (endMillis > System.currentTimeMillis()) {
                 val intent = Intent(context, AlarmReceiver::class.java).apply {
                     action = ACTION_TASK_END
@@ -138,6 +138,68 @@ object TaskAlarmScheduler {
 
     private fun getStartRequestCode(taskId: Long): Int = (taskId * 2 + 10000).toInt()
     private fun getEndRequestCode(taskId: Long): Int = (taskId * 2 + 10001).toInt()
+
+    private fun getNextAlarmTimeMillis(dateStr: String, timeStr: String, repeatMode: String): Long {
+        val now = System.currentTimeMillis()
+        val timeParts = timeStr.split(":").mapNotNull { it.toIntOrNull() }
+        val hour = if (timeParts.size >= 2) timeParts[0] else 9
+        val minute = if (timeParts.size >= 2) timeParts[1] else 0
+
+        return when (repeatMode.uppercase()) {
+            "DAILY" -> {
+                val cal = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                if (cal.timeInMillis <= now) {
+                    cal.add(Calendar.DAY_OF_YEAR, 1)
+                }
+                cal.timeInMillis
+            }
+            "WEEKDAYS" -> {
+                val cal = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                if (cal.timeInMillis <= now) {
+                    cal.add(Calendar.DAY_OF_YEAR, 1)
+                }
+                while (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                    cal.add(Calendar.DAY_OF_YEAR, 1)
+                }
+                cal.timeInMillis
+            }
+            "WEEKLY" -> {
+                val taskBaseCal = Calendar.getInstance().apply {
+                    try {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val d = sdf.parse(dateStr)
+                        if (d != null) time = d
+                    } catch (e: Exception) {
+                        // ignore
+                    }
+                }
+                val targetDayOfWeek = taskBaseCal.get(Calendar.DAY_OF_WEEK)
+                val cal = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                while (cal.get(Calendar.DAY_OF_WEEK) != targetDayOfWeek || cal.timeInMillis <= now) {
+                    cal.add(Calendar.DAY_OF_YEAR, 1)
+                }
+                cal.timeInMillis
+            }
+            else -> {
+                parseDateTimeToMillis(dateStr, timeStr)
+            }
+        }
+    }
 
     private fun parseDateTimeToMillis(dateStr: String, timeStr: String): Long {
         return try {

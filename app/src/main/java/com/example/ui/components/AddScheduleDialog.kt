@@ -39,16 +39,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.data.local.entity.WeeklyScheduleEntity
-import com.example.ui.theme.OnPrimaryContainer
-import com.example.ui.theme.OnSurface
-import com.example.ui.theme.OnSurfaceVariant
-import com.example.ui.theme.OutlineVariant
-import com.example.ui.theme.PrimaryContainer
-import com.example.ui.theme.SurfaceContainer
-import com.example.ui.theme.SurfaceDark
+import com.example.ui.theme.CozyBorder
+import com.example.ui.theme.CozyBorderSubtle
+import com.example.ui.theme.CozyCardBg
+import com.example.ui.theme.CozyCocoaMuted
+import com.example.ui.theme.CozyCocoaText
+import com.example.ui.theme.CozyCreamBg
+import com.example.ui.theme.CozyForestDark
+import com.example.ui.theme.CozyLeafGreen
+import com.example.ui.theme.CozyLeafGreenContainer
 
 val DaysOfWeekLabels = listOf(
     1 to "Lun",
@@ -78,30 +82,35 @@ fun AddScheduleDialog(
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
-            shape = RoundedCornerShape(20.dp),
-            color = SurfaceDark,
-            border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            shape = RoundedCornerShape(24.dp),
+            color = CozyCreamBg,
+            border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(20.dp)
+                    .padding(22.dp)
             ) {
                 Text(
                     text = if (scheduleToEdit == null) "Añadir al Horario Semanal" else "Editar Horario",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = OnSurface
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = CozyForestDark
                 )
                 Spacer(modifier = Modifier.height(14.dp))
 
                 // Day of Week Selector
-                Text("Día de la semana", style = MaterialTheme.typography.labelMedium, color = OnSurfaceVariant)
+                Text("Día de la semana", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold), color = CozyCocoaMuted)
                 Spacer(modifier = Modifier.height(6.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(CozyCardBg)
+                        .border(1.dp, CozyBorderSubtle, RoundedCornerShape(12.dp))
+                        .padding(4.dp)
                 ) {
                     DaysOfWeekLabels.forEach { (dayInt, label) ->
                         val isSelected = selectedDay == dayInt
@@ -110,14 +119,14 @@ fun AddScheduleDialog(
                                 .weight(1f)
                                 .height(36.dp)
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(if (isSelected) PrimaryContainer else SurfaceContainer)
+                                .background(if (isSelected) CozyLeafGreen else Color.Transparent)
                                 .clickable { selectedDay = dayInt },
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = label,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = if (isSelected) OnPrimaryContainer else OnSurfaceVariant
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium),
+                                color = if (isSelected) Color.White else CozyCocoaText
                             )
                         }
                     }
@@ -133,13 +142,16 @@ fun AddScheduleDialog(
                     placeholder = { Text("Ej. Matemáticas Avanzadas") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = OnSurface,
-                        unfocusedTextColor = OnSurface,
-                        focusedBorderColor = PrimaryContainer,
-                        unfocusedBorderColor = OutlineVariant,
-                        focusedLabelColor = PrimaryContainer,
-                        unfocusedLabelColor = OnSurfaceVariant
+                        focusedTextColor = CozyCocoaText,
+                        unfocusedTextColor = CozyCocoaText,
+                        focusedBorderColor = CozyLeafGreen,
+                        unfocusedBorderColor = CozyBorder,
+                        focusedLabelColor = CozyForestDark,
+                        unfocusedLabelColor = CozyCocoaMuted,
+                        focusedContainerColor = CozyCardBg,
+                        unfocusedContainerColor = CozyCardBg
                     ),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_schedule_title")
@@ -155,13 +167,16 @@ fun AddScheduleDialog(
                     placeholder = { Text("Ej. Aula 102 - Edificio Central") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = OnSurface,
-                        unfocusedTextColor = OnSurface,
-                        focusedBorderColor = PrimaryContainer,
-                        unfocusedBorderColor = OutlineVariant,
-                        focusedLabelColor = PrimaryContainer,
-                        unfocusedLabelColor = OnSurfaceVariant
+                        focusedTextColor = CozyCocoaText,
+                        unfocusedTextColor = CozyCocoaText,
+                        focusedBorderColor = CozyLeafGreen,
+                        unfocusedBorderColor = CozyBorder,
+                        focusedLabelColor = CozyForestDark,
+                        unfocusedLabelColor = CozyCocoaMuted,
+                        focusedContainerColor = CozyCardBg,
+                        unfocusedContainerColor = CozyCardBg
                     ),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -175,13 +190,16 @@ fun AddScheduleDialog(
                     placeholder = { Text("Ej. Dr. Ramírez o Práctica") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = OnSurface,
-                        unfocusedTextColor = OnSurface,
-                        focusedBorderColor = PrimaryContainer,
-                        unfocusedBorderColor = OutlineVariant,
-                        focusedLabelColor = PrimaryContainer,
-                        unfocusedLabelColor = OnSurfaceVariant
+                        focusedTextColor = CozyCocoaText,
+                        unfocusedTextColor = CozyCocoaText,
+                        focusedBorderColor = CozyLeafGreen,
+                        unfocusedBorderColor = CozyBorder,
+                        focusedLabelColor = CozyForestDark,
+                        unfocusedLabelColor = CozyCocoaMuted,
+                        focusedContainerColor = CozyCardBg,
+                        unfocusedContainerColor = CozyCardBg
                     ),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -198,13 +216,16 @@ fun AddScheduleDialog(
                         label = { Text("Inicio (HH:mm)") },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = OnSurface,
-                            unfocusedTextColor = OnSurface,
-                            focusedBorderColor = PrimaryContainer,
-                            unfocusedBorderColor = OutlineVariant,
-                            focusedLabelColor = PrimaryContainer,
-                            unfocusedLabelColor = OnSurfaceVariant
+                            focusedTextColor = CozyCocoaText,
+                            unfocusedTextColor = CozyCocoaText,
+                            focusedBorderColor = CozyLeafGreen,
+                            unfocusedBorderColor = CozyBorder,
+                            focusedLabelColor = CozyForestDark,
+                            unfocusedLabelColor = CozyCocoaMuted,
+                            focusedContainerColor = CozyCardBg,
+                            unfocusedContainerColor = CozyCardBg
                         ),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.weight(1f)
                     )
                     OutlinedTextField(
@@ -213,13 +234,16 @@ fun AddScheduleDialog(
                         label = { Text("Fin (HH:mm)") },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = OnSurface,
-                            unfocusedTextColor = OnSurface,
-                            focusedBorderColor = PrimaryContainer,
-                            unfocusedBorderColor = OutlineVariant,
-                            focusedLabelColor = PrimaryContainer,
-                            unfocusedLabelColor = OnSurfaceVariant
+                            focusedTextColor = CozyCocoaText,
+                            unfocusedTextColor = CozyCocoaText,
+                            focusedBorderColor = CozyLeafGreen,
+                            unfocusedBorderColor = CozyBorder,
+                            focusedLabelColor = CozyForestDark,
+                            unfocusedLabelColor = CozyCocoaMuted,
+                            focusedContainerColor = CozyCardBg,
+                            unfocusedContainerColor = CozyCardBg
                         ),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -237,19 +261,19 @@ fun AddScheduleDialog(
                         checked = isRecess,
                         onCheckedChange = { isRecess = it },
                         colors = CheckboxDefaults.colors(
-                            checkedColor = PrimaryContainer,
-                            checkmarkColor = OnPrimaryContainer,
-                            uncheckedColor = OutlineVariant
+                            checkedColor = CozyLeafGreen,
+                            checkmarkColor = Color.White,
+                            uncheckedColor = CozyCocoaMuted
                         )
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Es un Receso / Pausa", color = OnSurface, style = MaterialTheme.typography.bodyMedium)
+                    Text("Es un Receso / Pausa", color = CozyCocoaText, style = MaterialTheme.typography.bodyMedium)
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Color palette
-                Text("Color", style = MaterialTheme.typography.labelMedium, color = OnSurfaceVariant)
+                Text("Color", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold), color = CozyCocoaMuted)
                 Spacer(modifier = Modifier.height(6.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -265,7 +289,7 @@ fun AddScheduleDialog(
                                 .clickable { selectedColorHex = hex }
                                 .border(
                                     width = if (isSelected) 3.dp else 0.dp,
-                                    color = if (isSelected) Color.White else Color.Transparent,
+                                    color = if (isSelected) CozyForestDark else Color.Transparent,
                                     shape = CircleShape
                                 ),
                             contentAlignment = Alignment.Center
@@ -274,7 +298,7 @@ fun AddScheduleDialog(
                                 Icon(
                                     imageVector = Icons.Filled.Check,
                                     contentDescription = "Selected",
-                                    tint = Color.Black,
+                                    tint = Color.White,
                                     modifier = Modifier.size(14.dp)
                                 )
                             }
@@ -291,7 +315,7 @@ fun AddScheduleDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancelar", color = OnSurfaceVariant)
+                        Text("Cancelar", color = CozyCocoaMuted)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
@@ -313,13 +337,13 @@ fun AddScheduleDialog(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = PrimaryContainer,
-                            contentColor = OnPrimaryContainer
+                            containerColor = CozyLeafGreen,
+                            contentColor = Color.White
                         ),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.testTag("save_schedule_button")
                     ) {
-                        Text("Guardar", style = MaterialTheme.typography.labelLarge)
+                        Text("Guardar", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold))
                     }
                 }
             }

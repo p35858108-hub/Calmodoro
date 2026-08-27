@@ -40,9 +40,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.Functions
 import androidx.compose.material.icons.filled.HistoryEdu
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.NotificationsActive
-import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Science
@@ -54,7 +52,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -84,13 +81,21 @@ import com.example.ui.theme.AccentEmerald
 import com.example.ui.theme.AccentIndigo
 import com.example.ui.theme.AccentRose
 import com.example.ui.theme.AccentTeal
-import com.example.ui.theme.OnPrimaryContainer
-import com.example.ui.theme.OnSurface
-import com.example.ui.theme.OnSurfaceVariant
-import com.example.ui.theme.OutlineVariant
-import com.example.ui.theme.PrimaryContainer
-import com.example.ui.theme.SurfaceContainer
-import com.example.ui.theme.SurfaceDark
+import com.example.ui.theme.CozyBorder
+import com.example.ui.theme.CozyBorderSubtle
+import com.example.ui.theme.CozyCardAlt
+import com.example.ui.theme.CozyCardBg
+import com.example.ui.theme.CozyCocoaMuted
+import com.example.ui.theme.CozyCocoaText
+import com.example.ui.theme.CozyCreamBg
+import com.example.ui.theme.CozyForestDark
+import com.example.ui.theme.CozyHoney
+import com.example.ui.theme.CozyLeafGreen
+import com.example.ui.theme.CozyLeafGreenContainer
+import com.example.ui.theme.CozyPeach
+import com.example.ui.theme.CozyPeachContainer
+import com.example.ui.theme.CozySky
+import com.example.ui.theme.CozySkyContainer
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -182,16 +187,16 @@ fun AddTaskDialog(
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
-            shape = RoundedCornerShape(24.dp),
-            color = SurfaceDark,
-            border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            shape = RoundedCornerShape(26.dp),
+            color = CozyCreamBg,
+            border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(20.dp)
+                    .padding(22.dp)
                     .verticalScroll(rememberScrollState())
             ) {
                 // Dialog Title
@@ -203,7 +208,7 @@ fun AddTaskDialog(
                     Text(
                         text = if (taskToEdit == null) "Nueva Tarea de Agenda" else "Editar Tarea",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = OnSurface
+                        color = CozyForestDark
                     )
                 }
 
@@ -213,16 +218,17 @@ fun AddTaskDialog(
                 Text(
                     text = "Fecha de la Tarea",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = OnSurfaceVariant
+                    color = CozyCocoaMuted
                 )
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Surface(
-                    shape = RoundedCornerShape(14.dp),
-                    color = SurfaceContainer,
+                    shape = RoundedCornerShape(16.dp),
+                    color = CozyCardBg,
+                    border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(10.dp)) {
+                    Column(modifier = Modifier.padding(12.dp)) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -235,13 +241,13 @@ fun AddTaskDialog(
                                 Icon(
                                     imageVector = Icons.Filled.CalendarMonth,
                                     contentDescription = "Fecha",
-                                    tint = PrimaryContainer,
+                                    tint = CozyLeafGreen,
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Text(
                                     text = formattedDisplayDate,
-                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                                    color = OnSurface
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = CozyCocoaText
                                 )
                             }
 
@@ -271,7 +277,7 @@ fun AddTaskDialog(
                                     ).show()
                                 }
                             ) {
-                                Text("Cambiar fecha", color = PrimaryContainer, fontSize = 13.sp)
+                                Text("Cambiar fecha", color = CozyLeafGreen, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             }
                         }
 
@@ -293,11 +299,11 @@ fun AddTaskDialog(
                             ).forEach { (label, iso) ->
                                 val isSelected = selectedDate == iso
                                 Surface(
-                                    shape = RoundedCornerShape(8.dp),
-                                    color = if (isSelected) PrimaryContainer.copy(alpha = 0.25f) else SurfaceDark,
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = if (isSelected) CozyLeafGreen else CozyCardAlt,
                                     border = androidx.compose.foundation.BorderStroke(
                                         1.dp,
-                                        if (isSelected) PrimaryContainer else Color.Transparent
+                                        if (isSelected) CozyLeafGreen else CozyBorderSubtle
                                     ),
                                     modifier = Modifier
                                         .clickable { selectedDate = iso }
@@ -305,9 +311,9 @@ fun AddTaskDialog(
                                 ) {
                                     Text(
                                         text = label,
-                                        color = if (isSelected) PrimaryContainer else OnSurfaceVariant,
-                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
-                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                        color = if (isSelected) Color.White else CozyCocoaText,
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                     )
                                 }
                             }
@@ -325,13 +331,16 @@ fun AddTaskDialog(
                     placeholder = { Text("Ej. Estudio de Matemáticas") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = OnSurface,
-                        unfocusedTextColor = OnSurface,
-                        focusedBorderColor = PrimaryContainer,
-                        unfocusedBorderColor = OutlineVariant,
-                        focusedLabelColor = PrimaryContainer,
-                        unfocusedLabelColor = OnSurfaceVariant
+                        focusedTextColor = CozyCocoaText,
+                        unfocusedTextColor = CozyCocoaText,
+                        focusedBorderColor = CozyLeafGreen,
+                        unfocusedBorderColor = CozyBorder,
+                        focusedLabelColor = CozyForestDark,
+                        unfocusedLabelColor = CozyCocoaMuted,
+                        focusedContainerColor = CozyCardBg,
+                        unfocusedContainerColor = CozyCardBg
                     ),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_task_title")
@@ -347,13 +356,16 @@ fun AddTaskDialog(
                     placeholder = { Text("Ej. Repasar teoría y ejercicios") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = OnSurface,
-                        unfocusedTextColor = OnSurface,
-                        focusedBorderColor = PrimaryContainer,
-                        unfocusedBorderColor = OutlineVariant,
-                        focusedLabelColor = PrimaryContainer,
-                        unfocusedLabelColor = OnSurfaceVariant
+                        focusedTextColor = CozyCocoaText,
+                        unfocusedTextColor = CozyCocoaText,
+                        focusedBorderColor = CozyLeafGreen,
+                        unfocusedBorderColor = CozyBorder,
+                        focusedLabelColor = CozyForestDark,
+                        unfocusedLabelColor = CozyCocoaMuted,
+                        focusedContainerColor = CozyCardBg,
+                        unfocusedContainerColor = CozyCardBg
                     ),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -370,13 +382,16 @@ fun AddTaskDialog(
                         label = { Text("Inicio (HH:mm)") },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = OnSurface,
-                            unfocusedTextColor = OnSurface,
-                            focusedBorderColor = PrimaryContainer,
-                            unfocusedBorderColor = OutlineVariant,
-                            focusedLabelColor = PrimaryContainer,
-                            unfocusedLabelColor = OnSurfaceVariant
+                            focusedTextColor = CozyCocoaText,
+                            unfocusedTextColor = CozyCocoaText,
+                            focusedBorderColor = CozyLeafGreen,
+                            unfocusedBorderColor = CozyBorder,
+                            focusedLabelColor = CozyForestDark,
+                            unfocusedLabelColor = CozyCocoaMuted,
+                            focusedContainerColor = CozyCardBg,
+                            unfocusedContainerColor = CozyCardBg
                         ),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.weight(1f)
                     )
                     OutlinedTextField(
@@ -385,13 +400,16 @@ fun AddTaskDialog(
                         label = { Text("Fin (HH:mm)") },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = OnSurface,
-                            unfocusedTextColor = OnSurface,
-                            focusedBorderColor = PrimaryContainer,
-                            unfocusedBorderColor = OutlineVariant,
-                            focusedLabelColor = PrimaryContainer,
-                            unfocusedLabelColor = OnSurfaceVariant
+                            focusedTextColor = CozyCocoaText,
+                            unfocusedTextColor = CozyCocoaText,
+                            focusedBorderColor = CozyLeafGreen,
+                            unfocusedBorderColor = CozyBorder,
+                            focusedLabelColor = CozyForestDark,
+                            unfocusedLabelColor = CozyCocoaMuted,
+                            focusedContainerColor = CozyCardBg,
+                            unfocusedContainerColor = CozyCardBg
                         ),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -407,7 +425,7 @@ fun AddTaskDialog(
                     Text(
                         text = "Color de la Tarea",
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = OnSurfaceVariant
+                        color = CozyCocoaMuted
                     )
                     TextButton(
                         onClick = { showMoreColors = !showMoreColors },
@@ -415,7 +433,7 @@ fun AddTaskDialog(
                     ) {
                         Text(
                             text = if (showMoreColors) "− Menos" else "+ Más colores",
-                            color = PrimaryContainer,
+                            color = CozyLeafGreen,
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                         )
                     }
@@ -438,7 +456,7 @@ fun AddTaskDialog(
                                 .clickable { selectedColorHex = hex }
                                 .border(
                                     width = if (isSelected) 3.dp else 0.dp,
-                                    color = if (isSelected) Color.White else Color.Transparent,
+                                    color = if (isSelected) CozyForestDark else Color.Transparent,
                                     shape = CircleShape
                                 ),
                             contentAlignment = Alignment.Center
@@ -447,7 +465,7 @@ fun AddTaskDialog(
                                 Icon(
                                     imageVector = Icons.Filled.Check,
                                     contentDescription = "Selected",
-                                    tint = Color.Black,
+                                    tint = Color.White,
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -457,7 +475,8 @@ fun AddTaskDialog(
                     // "+ Más" pill button right next to current colors
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = if (showMoreColors) PrimaryContainer else SurfaceContainer,
+                        color = if (showMoreColors) CozyLeafGreen else CozyCardBg,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, CozyBorder),
                         modifier = Modifier
                             .height(34.dp)
                             .clickable { showMoreColors = !showMoreColors }
@@ -470,13 +489,13 @@ fun AddTaskDialog(
                             Icon(
                                 imageVector = if (showMoreColors) Icons.Filled.ExpandLess else Icons.Filled.Add,
                                 contentDescription = "Más colores",
-                                tint = if (showMoreColors) OnPrimaryContainer else OnSurfaceVariant,
+                                tint = if (showMoreColors) Color.White else CozyCocoaText,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = if (showMoreColors) "Menos" else "Más",
-                                color = if (showMoreColors) OnPrimaryContainer else OnSurfaceVariant,
+                                color = if (showMoreColors) Color.White else CozyCocoaText,
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                             )
                         }
@@ -493,7 +512,7 @@ fun AddTaskDialog(
                         Text(
                             text = "Paleta extendida",
                             style = MaterialTheme.typography.labelSmall,
-                            color = OnSurfaceVariant
+                            color = CozyCocoaMuted
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         FlowRow(
@@ -511,7 +530,7 @@ fun AddTaskDialog(
                                         .clickable { selectedColorHex = hex }
                                         .border(
                                             width = if (isSelected) 3.dp else 0.dp,
-                                            color = if (isSelected) Color.White else Color.Transparent,
+                                            color = if (isSelected) CozyForestDark else Color.Transparent,
                                             shape = CircleShape
                                         ),
                                     contentAlignment = Alignment.Center
@@ -532,13 +551,81 @@ fun AddTaskDialog(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                // Fixed Task & Repetition Options
+                // Repetition & Recurrence Section
                 Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = SurfaceContainer,
+                    shape = RoundedCornerShape(18.dp),
+                    color = CozyCardBg,
+                    border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Repeat,
+                                contentDescription = "Frecuencia",
+                                tint = CozyLeafGreen,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Column {
+                                Text(
+                                    text = "Frecuencia / Repetición",
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = CozyForestDark
+                                )
+                                Text(
+                                    text = when (repeatMode) {
+                                        "DAILY" -> "Se repetirá todos los días en el calendario"
+                                        "WEEKLY" -> "Se repetirá semanalmente el mismo día"
+                                        "WEEKDAYS" -> "Se repetirá de lunes a viernes"
+                                        else -> "Solo para la fecha seleccionada"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = CozyCocoaMuted
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            listOf(
+                                "NONE" to "Una vez",
+                                "DAILY" to "Cada día",
+                                "WEEKLY" to "Semanal",
+                                "WEEKDAYS" to "Lun - Vie"
+                            ).forEach { (mode, label) ->
+                                val isSelected = repeatMode == mode
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = { repeatMode = mode },
+                                    label = { Text(label, fontSize = 12.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium) },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = CozyLeafGreen,
+                                        selectedLabelColor = Color.White,
+                                        containerColor = CozyCardAlt,
+                                        labelColor = CozyCocoaText
+                                    ),
+                                    border = FilterChipDefaults.filterChipBorder(
+                                        borderColor = if (isSelected) CozyLeafGreen else CozyBorderSubtle,
+                                        enabled = true,
+                                        selected = isSelected
+                                    ),
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(CozyBorderSubtle))
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // Fixed task switch
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -551,19 +638,19 @@ fun AddTaskDialog(
                                 Icon(
                                     imageVector = Icons.Filled.PushPin,
                                     contentDescription = "Tarea Fija",
-                                    tint = if (isFixed) AccentAmber else OnSurfaceVariant,
+                                    tint = if (isFixed) CozyHoney else CozyCocoaMuted,
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Column {
                                     Text(
-                                        text = "Tarea Fija / Rutina",
-                                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                                        color = OnSurface
+                                        text = "Marcar como Tarea Fija",
+                                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                        color = CozyCocoaText
                                     )
                                     Text(
-                                        text = "Destacar como compromiso fijo",
+                                        text = "Destacar como rutina prioritaria",
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = OnSurfaceVariant
+                                        color = CozyCocoaMuted
                                     )
                                 }
                             }
@@ -571,42 +658,12 @@ fun AddTaskDialog(
                                 checked = isFixed,
                                 onCheckedChange = { isFixed = it },
                                 colors = SwitchDefaults.colors(
-                                    checkedThumbColor = AccentAmber,
-                                    checkedTrackColor = AccentAmber.copy(alpha = 0.35f),
-                                    uncheckedThumbColor = OnSurfaceVariant,
-                                    uncheckedTrackColor = SurfaceDark
+                                    checkedThumbColor = CozyHoney,
+                                    checkedTrackColor = CozyHoney.copy(alpha = 0.35f),
+                                    uncheckedThumbColor = CozyCocoaMuted,
+                                    uncheckedTrackColor = CozyCardAlt
                                 )
                             )
-                        }
-
-                        if (isFixed) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Repetición",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = OnSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                listOf(
-                                    "NONE" to "Solo esta fecha",
-                                    "DAILY" to "Todos los días",
-                                    "WEEKLY" to "Semanal"
-                                ).forEach { (mode, label) ->
-                                    val isSelected = repeatMode == mode
-                                    FilterChip(
-                                        selected = isSelected,
-                                        onClick = { repeatMode = mode },
-                                        label = { Text(label, fontSize = 11.sp) },
-                                        colors = FilterChipDefaults.filterChipColors(
-                                            selectedContainerColor = AccentAmber.copy(alpha = 0.25f),
-                                            selectedLabelColor = AccentAmber,
-                                            containerColor = SurfaceDark,
-                                            labelColor = OnSurfaceVariant
-                                        )
-                                    )
-                                }
-                            }
                         }
                     }
                 }
@@ -615,15 +672,16 @@ fun AddTaskDialog(
 
                 // Notifications Section
                 Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = SurfaceContainer,
+                    shape = RoundedCornerShape(18.dp),
+                    color = CozyCardBg,
+                    border = androidx.compose.foundation.BorderStroke(1.5.dp, CozyBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
+                    Column(modifier = Modifier.padding(14.dp)) {
                         Text(
                             text = "Recordatorios y Notificaciones",
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = OnSurfaceVariant
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = CozyForestDark
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -641,19 +699,19 @@ fun AddTaskDialog(
                                 Icon(
                                     imageVector = Icons.Filled.Alarm,
                                     contentDescription = "Notificar al inicio",
-                                    tint = if (notifyOnStart) PrimaryContainer else OnSurfaceVariant,
+                                    tint = if (notifyOnStart) CozyLeafGreen else CozyCocoaMuted,
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Column {
                                     Text(
                                         text = "Notificar al iniciar ($startTime)",
-                                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                                        color = OnSurface
+                                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                        color = CozyCocoaText
                                     )
                                     Text(
                                         text = "Alarma y aviso para comenzar a tiempo",
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = OnSurfaceVariant
+                                        color = CozyCocoaMuted
                                     )
                                 }
                             }
@@ -661,10 +719,10 @@ fun AddTaskDialog(
                                 checked = notifyOnStart,
                                 onCheckedChange = { notifyOnStart = it },
                                 colors = SwitchDefaults.colors(
-                                    checkedThumbColor = PrimaryContainer,
-                                    checkedTrackColor = PrimaryContainer.copy(alpha = 0.35f),
-                                    uncheckedThumbColor = OnSurfaceVariant,
-                                    uncheckedTrackColor = SurfaceDark
+                                    checkedThumbColor = CozyLeafGreen,
+                                    checkedTrackColor = CozyLeafGreen.copy(alpha = 0.35f),
+                                    uncheckedThumbColor = CozyCocoaMuted,
+                                    uncheckedTrackColor = CozyCardAlt
                                 )
                             )
                         }
@@ -685,19 +743,19 @@ fun AddTaskDialog(
                                 Icon(
                                     imageVector = Icons.Filled.NotificationsActive,
                                     contentDescription = "Notificar al finalizar",
-                                    tint = if (notifyOnEnd) AccentEmerald else OnSurfaceVariant,
+                                    tint = if (notifyOnEnd) CozySky else CozyCocoaMuted,
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Column {
                                     Text(
                                         text = "Notificar al finalizar ($endTime)",
-                                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                                        color = OnSurface
+                                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                        color = CozyCocoaText
                                     )
                                     Text(
                                         text = "Aviso de cierre de bloque de tiempo",
                                         style = MaterialTheme.typography.labelSmall,
-                                        color = OnSurfaceVariant
+                                        color = CozyCocoaMuted
                                     )
                                 }
                             }
@@ -705,10 +763,10 @@ fun AddTaskDialog(
                                 checked = notifyOnEnd,
                                 onCheckedChange = { notifyOnEnd = it },
                                 colors = SwitchDefaults.colors(
-                                    checkedThumbColor = AccentEmerald,
-                                    checkedTrackColor = AccentEmerald.copy(alpha = 0.35f),
-                                    uncheckedThumbColor = OnSurfaceVariant,
-                                    uncheckedTrackColor = SurfaceDark
+                                    checkedThumbColor = CozySky,
+                                    checkedTrackColor = CozySky.copy(alpha = 0.35f),
+                                    uncheckedThumbColor = CozyCocoaMuted,
+                                    uncheckedTrackColor = CozyCardAlt
                                 )
                             )
                         }
@@ -721,7 +779,7 @@ fun AddTaskDialog(
                 Text(
                     text = "Icono de Tarea",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                    color = OnSurfaceVariant
+                    color = CozyCocoaMuted
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 LazyRow(
@@ -732,16 +790,17 @@ fun AddTaskDialog(
                         val isSelected = selectedIconName == name
                         Box(
                             modifier = Modifier
-                                .size(38.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(if (isSelected) PrimaryContainer else SurfaceContainer)
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(if (isSelected) CozyLeafGreen else CozyCardBg)
+                                .border(1.dp, if (isSelected) CozyLeafGreen else CozyBorder, RoundedCornerShape(12.dp))
                                 .clickable { selectedIconName = name },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = icon,
                                 contentDescription = name,
-                                tint = if (isSelected) OnPrimaryContainer else OnSurfaceVariant,
+                                tint = if (isSelected) Color.White else CozyCocoaText,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -757,7 +816,7 @@ fun AddTaskDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancelar", color = OnSurfaceVariant)
+                        Text("Cancelar", color = CozyCocoaMuted)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
@@ -786,8 +845,8 @@ fun AddTaskDialog(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = PrimaryContainer,
-                            contentColor = OnPrimaryContainer
+                            containerColor = CozyLeafGreen,
+                            contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier.testTag("save_task_button")

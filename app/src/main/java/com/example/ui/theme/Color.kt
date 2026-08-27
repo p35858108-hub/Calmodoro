@@ -1,47 +1,70 @@
 package com.example.ui.theme
+
 import androidx.compose.ui.graphics.Color
 
-// Calmodoro Design System Colors (Animal Crossing Cozy Theme)
-val SurfaceDark = Color(0xFFFAF3E0)            // Fondo crema cálido
-val BackgroundDark = Color(0xFFFFFBEA)         // Blanco papel / Papyrus
-val SurfaceContainerLowest = Color(0xFFF0E5CF)   // Madera clara baja
-val SurfaceContainerLow = Color(0xFFE8DCC4)      // Madera clara
-val SurfaceContainer = Color(0xFFDFD0B5)         // Tono interfaz Nook Phone
-val SurfaceContainerHigh = Color(0xFFD4C3A3)     // Contenedor elevado
-val SurfaceContainerHighest = Color(0xFFC8B490)  // Contenedor fuerte
+// Cozy Animal Crossing Inspired Color Palette
+val CozyCreamBg = Color(0xFFFBF6EE)          // Warm Island Cream Canvas
+val CozyCardBg = Color(0xFFFFFFFF)           // Crisp White Cloud Card
+val CozyCardAlt = Color(0xFFF3ECE0)          // Warm Sand Tint
+val CozyCardSubtle = Color(0xFFECE3D4)       // Soft Tan Container
+val CozyLeafGreen = Color(0xFF48A868)        // Animal Crossing Leaf Green
+val CozyLeafGreenContainer = Color(0xFFD8F2DD)// Soft Mint Leaf Pill
+val CozyForestDark = Color(0xFF1E3A27)       // Deep Forest Evergreen
+val CozyCocoaText = Color(0xFF3A2E24)        // Rich Warm Coffee Text
+val CozyCocoaMuted = Color(0xFF7E7265)       // Warm Earthy Slate
+val CozyBorder = Color(0xFFE5DCCE)           // Gentle Biscuit Border
+val CozyBorderSubtle = Color(0xFFEFE8DD)     // Subtle Warm Line
 
-val OnSurface = Color(0xFF534338)              // Marrón texto oscuro
-val OnSurfaceVariant = Color(0xFF7A685A)       // Marrón secundario
-val OutlineColor = Color(0xFFBCA288)           // Bordes suaves madera
-val OutlineVariant = Color(0xFFD3C1AF)         // Divisores sutiles
+// Cozy Accents
+val CozyPeach = Color(0xFFFF8B70)            // Sweet Island Peach
+val CozyPeachContainer = Color(0xFFFFE6DE)   // Peach Blossom Pill
+val CozyHoney = Color(0xFFF7BD38)            // Warm Sunbeam Honey
+val CozyHoneyContainer = Color(0xFFFFF2D3)   // Honeycomb Pill
+val CozySky = Color(0xFF5AB6D8)              // Crisp River Blue
+val CozySkyContainer = Color(0xFFDFF3FA)     // Sky Cloud Pill
+val CozyLavender = Color(0xFF9F86D1)         // Hydrangea Purple
+val CozyLavenderContainer = Color(0xFFEDE5FA)// Soft Lilac Pill
+val CozyWood = Color(0xFF8D6E63)             // Warm Oak Wood
 
-// Acentos Primarios - Verde Nook / Hoja
-val Primary = Color(0xFF72B896)                // Verde hoja principal
-val PrimaryContainer = Color(0xFFA2D5AB)       // Verde pastel claro
-val OnPrimary = Color(0xFFFFFFFF)              // Blanco puro
-val OnPrimaryContainer = Color(0xFF2C5E43)     // Verde bosque texto
+// Compatibility mapping for existing components
+val SurfaceDark = CozyCardBg
+val BackgroundDark = CozyCreamBg
+val SurfaceLight = CozyCardBg
+val BackgroundLight = CozyCreamBg
+val SurfaceContainerLowest = CozyCreamBg
+val SurfaceContainerLow = CozyCardAlt
+val SurfaceContainer = CozyCardBg
+val SurfaceContainerHigh = CozyCardAlt
+val SurfaceContainerHighest = CozyCardSubtle
 
-// Acentos Secundarios - Amarillo Globo / Sol
-val Secondary = Color(0xFFF7D070)              // Amarillo cálido
-val SecondaryContainer = Color(0xFFFDE8A0)     // Crema amarillento
-val OnSecondaryContainer = Color(0xFF6B5314)   // Marrón dorado texto
+val OnSurface = CozyCocoaText
+val OnSurfaceVariant = CozyCocoaMuted
+val OutlineColor = CozyBorder
+val OutlineVariant = CozyBorderSubtle
+
+// Leaf Green Primary & Containers
+val PrimaryIndigo = CozyLeafGreen
+val PrimaryContainer = CozyLeafGreen
+val OnPrimary = Color(0xFFFFFFFF)
+val OnPrimaryContainer = Color(0xFFFFFFFF)
+
+// Peach / Lavender Secondary
+val SecondaryPurple = CozyPeach
+val SecondaryContainer = CozyLeafGreenContainer
+val OnSecondary = Color(0xFFFFFFFF)
+val OnSecondaryContainer = CozyForestDark
 
 // Functional Category Accents
-val AccentTeal = Color(0xFF76C7C0)             // Agua mar
-val AccentPeach = Color(0xFFF9A86C)            // Melocotón / Fruta
-val AccentCherry = Color(0xFFF28B93)           // Flor de cerezo
-val AccentGrass = Color(0xFF81C784)            // Hierba de verano
-val AccentTwilight = Color(0xFF9FA8DA)         // Cielo crepúsculo
-val AccentSky = Color(0xFF81D4FA)              // Cielo despejado
+val AccentTeal = CozyLeafGreen
+val AccentAmber = CozyHoney
+val AccentRose = CozyPeach
+val AccentEmerald = Color(0xFF38A169)
+val AccentIndigo = CozySky
+val AccentBlue = CozySky
 
 // Feedback & Alerts
-val ErrorColor = Color(0xFFE57373)             // Rojo suave pastel
-val ErrorContainer = Color(0xFFFFCDD2)        // Fondo alerta pastel
-val OnError = Color(0xFF5F1414)                // Texto alerta
+val ErrorColor = Color(0xFFE57373)
+val ErrorContainer = Color(0xFFFFEBEE)
+val OnError = Color(0xFFC62828)
+val OnErrorContainer = Color(0xFFC62828)
 
-// Aliases / Colores faltantes para pantallas
-val PrimaryIndigo = Color(0xFF6366F1)
-val AccentAmber = Color(0xFFF59E0B)
-val AccentEmerald = Color(0xFF10B981)
-val AccentIndigo = Color(0xFF4F46E5)
-val AccentRose = Color(0xFFF43F5E)

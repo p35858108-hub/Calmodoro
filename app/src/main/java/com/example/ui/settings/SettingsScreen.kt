@@ -7,16 +7,15 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,24 +30,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
@@ -65,34 +61,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.ui.theme.AccentAmber
-import com.example.ui.theme.AccentEmerald
-import com.example.ui.theme.AccentIndigo
-import com.example.ui.theme.AccentRose
-import com.example.ui.theme.AccentTeal
-import com.example.ui.theme.BackgroundDark
-import com.example.ui.theme.OnPrimaryContainer
-import com.example.ui.theme.OnSurface
-import com.example.ui.theme.OnSurfaceVariant
-import com.example.ui.theme.OutlineColor
-import com.example.ui.theme.OutlineVariant
-import com.example.ui.theme.PrimaryContainer
-import com.example.ui.theme.PrimaryIndigo
-import com.example.ui.theme.SurfaceContainer
-import com.example.ui.theme.SurfaceContainerHigh
-import com.example.ui.theme.SurfaceDark
+import com.example.R
+import com.example.ui.theme.CozyBorder
+import com.example.ui.theme.CozyBorderSubtle
+import com.example.ui.theme.CozyCardAlt
+import com.example.ui.theme.CozyCardBg
+import com.example.ui.theme.CozyCocoaMuted
+import com.example.ui.theme.CozyCocoaText
+import com.example.ui.theme.CozyCreamBg
+import com.example.ui.theme.CozyForestDark
+import com.example.ui.theme.CozyHoney
+import com.example.ui.theme.CozyHoneyContainer
+import com.example.ui.theme.CozyLeafGreen
+import com.example.ui.theme.CozyLeafGreenContainer
+import com.example.ui.theme.CozyPeach
+import com.example.ui.theme.CozyPeachContainer
+import com.example.ui.theme.CozySky
+import com.example.ui.theme.CozySkyContainer
 
 val AvailableSounds = listOf(
-    "digital_bell" to "Campana Digital",
-    "wind" to "Campanillas de Viento",
-    "lofi" to "Sonido Lo-Fi",
-    "minimal" to "Ping Minimalista"
+    "digital_bell" to "Campana de Isla 🔔",
+    "wind" to "Campanillas de Viento 🍃",
+    "lofi" to "Melodía Acústica 🎶",
+    "minimal" to "Gota de Rocío 💧"
 )
 
 @Composable
@@ -107,260 +106,275 @@ fun SettingsScreen(
 
     var showResetDialog by remember { mutableStateOf(false) }
 
-    val canScheduleExactAlarms = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-        alarmManager?.canScheduleExactAlarms() ?: true
-    } else {
-        true
-    }
-
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundDark)
+            .background(CozyCreamBg)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .padding(bottom = 100.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+                .padding(horizontal = 18.dp, vertical = 14.dp)
+                .padding(bottom = 90.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Header
-            Column {
-                Text(
-                    text = "Ajustes",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = OnSurface,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Configura tus preferencias de enfoque, alertas y datos.",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = OutlineColor,
-                    modifier = Modifier.padding(top = 2.dp)
-                )
-            }
-
-            // Section 1: Pomodoro Durations Card
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            // Hero Banner Illustration Card
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = CozyCardBg,
+                border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
+                shadowElevation = 2.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .fillMaxHeight()
-                            .background(AccentAmber)
-                    )
-
-                    Column(
+                Column {
+                    Image(
+                        painter = painterResource(id = R.drawable.img_cozy_banner),
+                        contentDescription = "Pueblo Cozy",
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
+                            .height(130.dp)
+                            .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Filled.Timer,
-                                contentDescription = null,
-                                tint = AccentAmber,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Tiempos del Pomodoro",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = OnSurface,
-                                fontWeight = FontWeight.Bold
+                                text = "Ajustes de la Isla",
+                                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                                color = CozyForestDark
                             )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(18.dp))
                         }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        // Focus Duration Slider
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Duración de Enfoque", color = OnSurface, style = MaterialTheme.typography.bodyMedium)
-                            Text(
-                                "${settings.focusDurationMinutes} min",
-                                color = AccentAmber,
-                                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-                            )
-                        }
-                        Slider(
-                            value = settings.focusDurationMinutes.toFloat(),
-                            onValueChange = { viewModel.updateFocusDuration(it.toInt()) },
-                            valueRange = 10f..60f,
-                            steps = 9,
-                            colors = SliderDefaults.colors(
-                                thumbColor = AccentAmber,
-                                activeTrackColor = AccentAmber,
-                                inactiveTrackColor = SurfaceContainer
-                            ),
-                            modifier = Modifier.testTag("slider_focus_duration")
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Short Break Slider
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Descanso Corto", color = OnSurface, style = MaterialTheme.typography.bodyMedium)
-                            Text(
-                                "${settings.shortBreakMinutes} min",
-                                color = AccentEmerald,
-                                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-                            )
-                        }
-                        Slider(
-                            value = settings.shortBreakMinutes.toFloat(),
-                            onValueChange = { viewModel.updateShortBreak(it.toInt()) },
-                            valueRange = 1f..15f,
-                            steps = 13,
-                            colors = SliderDefaults.colors(
-                                thumbColor = AccentEmerald,
-                                activeTrackColor = AccentEmerald,
-                                inactiveTrackColor = SurfaceContainer
-                            ),
-                            modifier = Modifier.testTag("slider_short_break")
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Long Break Slider
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text("Descanso Largo", color = OnSurface, style = MaterialTheme.typography.bodyMedium)
-                            Text(
-                                "${settings.longBreakMinutes} min",
-                                color = PrimaryContainer,
-                                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-                            )
-                        }
-                        Slider(
-                            value = settings.longBreakMinutes.toFloat(),
-                            onValueChange = { viewModel.updateLongBreak(it.toInt()) },
-                            valueRange = 5f..30f,
-                            steps = 4,
-                            colors = SliderDefaults.colors(
-                                thumbColor = PrimaryContainer,
-                                activeTrackColor = PrimaryContainer,
-                                inactiveTrackColor = SurfaceContainer
-                            ),
-                            modifier = Modifier.testTag("slider_long_break")
+                        Text(
+                            text = "Personaliza tus rutinas, sonidos relajantes y preferencias de estudio.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = CozyCocoaMuted,
+                            modifier = Modifier.padding(top = 2.dp)
                         )
                     }
                 }
             }
 
-            // Section 2: Audio & Sound Effects
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            // Section 1: Pomodoro Durations Card
+            Surface(
+                shape = RoundedCornerShape(22.dp),
+                color = CozyCardBg,
+                border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
+                shadowElevation = 1.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .fillMaxHeight()
-                            .background(PrimaryContainer)
-                    )
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = CozyHoneyContainer,
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.Timer,
+                                    contentDescription = null,
+                                    tint = CozyHoney,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "Tiempos del Pomodoro",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = CozyForestDark
+                        )
+                    }
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Focus Duration Slider
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Filled.VolumeUp,
-                                contentDescription = null,
-                                tint = PrimaryContainer,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
+                        Text("Duración de Enfoque", color = CozyCocoaText, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium))
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = CozyLeafGreenContainer
+                        ) {
                             Text(
-                                text = "Sonido de Alarma",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = OnSurface,
-                                fontWeight = FontWeight.Bold
+                                "${settings.focusDurationMinutes} min",
+                                color = CozyForestDark,
+                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
+                    }
+                    Slider(
+                        value = settings.focusDurationMinutes.toFloat(),
+                        onValueChange = { viewModel.updateFocusDuration(it.toInt()) },
+                        valueRange = 10f..60f,
+                        steps = 9,
+                        colors = SliderDefaults.colors(
+                            thumbColor = CozyLeafGreen,
+                            activeTrackColor = CozyLeafGreen,
+                            inactiveTrackColor = CozyCardAlt
+                        ),
+                        modifier = Modifier.testTag("slider_focus_duration")
+                    )
 
-                        Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                        AvailableSounds.forEach { (id, name) ->
-                            val isSelected = settings.soundChoice == id
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = if (isSelected) SurfaceContainerHigh else SurfaceContainer,
-                                border = androidx.compose.foundation.BorderStroke(
-                                    1.dp,
-                                    if (isSelected) PrimaryContainer else Color.Transparent
-                                ),
+                    // Short Break Slider
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Descanso Corto", color = CozyCocoaText, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium))
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = CozySkyContainer
+                        ) {
+                            Text(
+                                "${settings.shortBreakMinutes} min",
+                                color = CozySky,
+                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                    Slider(
+                        value = settings.shortBreakMinutes.toFloat(),
+                        onValueChange = { viewModel.updateShortBreak(it.toInt()) },
+                        valueRange = 1f..15f,
+                        steps = 13,
+                        colors = SliderDefaults.colors(
+                            thumbColor = CozySky,
+                            activeTrackColor = CozySky,
+                            inactiveTrackColor = CozyCardAlt
+                        ),
+                        modifier = Modifier.testTag("slider_short_break")
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // Long Break Slider
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Descanso Largo", color = CozyCocoaText, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium))
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = CozyPeachContainer
+                        ) {
+                            Text(
+                                "${settings.longBreakMinutes} min",
+                                color = CozyPeach,
+                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                    Slider(
+                        value = settings.longBreakMinutes.toFloat(),
+                        onValueChange = { viewModel.updateLongBreak(it.toInt()) },
+                        valueRange = 5f..30f,
+                        steps = 4,
+                        colors = SliderDefaults.colors(
+                            thumbColor = CozyPeach,
+                            activeTrackColor = CozyPeach,
+                            inactiveTrackColor = CozyCardAlt
+                        ),
+                        modifier = Modifier.testTag("slider_long_break")
+                    )
+                }
+            }
+
+            // Section 2: Audio & Alarm Tone Card
+            Surface(
+                shape = RoundedCornerShape(22.dp),
+                color = CozyCardBg,
+                border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
+                shadowElevation = 1.dp,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = CozySkyContainer,
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.VolumeUp,
+                                    contentDescription = null,
+                                    tint = CozySky,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "Campanilla de Fin de Sesión",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = CozyForestDark
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    AvailableSounds.forEach { (id, name) ->
+                        val isSelected = settings.soundChoice == id
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = if (isSelected) CozyLeafGreenContainer else CozyCardAlt,
+                            border = androidx.compose.foundation.BorderStroke(
+                                1.5.dp,
+                                if (isSelected) CozyLeafGreen else CozyBorderSubtle
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .clickable { viewModel.updateSoundChoice(id) }
+                        ) {
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                                    .clickable { viewModel.updateSoundChoice(id) }
+                                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 14.dp, vertical = 10.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Filled.VolumeUp,
-                                            contentDescription = null,
-                                            tint = if (isSelected) PrimaryContainer else OutlineColor,
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(12.dp))
-                                        Text(
-                                            text = name,
-                                            style = MaterialTheme.typography.bodyMedium.copy(
-                                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                                            ),
-                                            color = OnSurface
-                                        )
-                                    }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Filled.VolumeUp,
+                                        contentDescription = null,
+                                        tint = if (isSelected) CozyLeafGreen else CozyCocoaMuted,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    Text(
+                                        text = name,
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                        ),
+                                        color = CozyCocoaText
+                                    )
+                                }
 
-                                    IconButton(
-                                        onClick = { viewModel.previewSound(id) },
-                                        modifier = Modifier.size(32.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.PlayArrow,
-                                            contentDescription = "Escuchar prueba",
-                                            tint = PrimaryContainer,
-                                            modifier = Modifier.size(18.dp)
-                                        )
-                                    }
+                                IconButton(
+                                    onClick = { viewModel.previewSound(id) },
+                                    modifier = Modifier.size(32.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.PlayArrow,
+                                        contentDescription = "Escuchar prueba",
+                                        tint = CozyForestDark,
+                                        modifier = Modifier.size(18.dp)
+                                    )
                                 }
                             }
                         }
@@ -369,228 +383,221 @@ fun SettingsScreen(
             }
 
             // Section 3: System, Notifications & Vibration
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            Surface(
+                shape = RoundedCornerShape(22.dp),
+                color = CozyCardBg,
+                border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
+                shadowElevation = 1.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .fillMaxHeight()
-                            .background(AccentTeal)
-                    )
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = CozyPeachContainer,
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.Notifications,
+                                    contentDescription = null,
+                                    tint = CozyPeach,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "Avisos y Vibración",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = CozyForestDark
+                        )
+                    }
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    // Notification Switch
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Filled.Notifications,
-                                contentDescription = null,
-                                tint = AccentTeal,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Notificaciones y Vibración",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = OnSurface,
-                                fontWeight = FontWeight.Bold
-                            )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Avisos en Segundo Plano", color = CozyCocoaText, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium))
+                            Text("Muestra el temporizador en la barra de estado", color = CozyCocoaMuted, style = MaterialTheme.typography.labelSmall)
                         }
-
-                        Spacer(modifier = Modifier.height(14.dp))
-
-                        // Notification Switch
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Notificaciones en Segundo Plano", color = OnSurface, style = MaterialTheme.typography.bodyMedium)
-                                Text("Muestra el temporizador en la barra de estado", color = OutlineColor, style = MaterialTheme.typography.labelSmall)
-                            }
-                            Switch(
-                                checked = settings.notificationsEnabled,
-                                onCheckedChange = { enabled ->
-                                    viewModel.updateNotifications(enabled)
-                                    if (enabled) onRequestNotificationPermission()
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = Color.Black,
-                                    checkedTrackColor = PrimaryContainer
-                                )
+                        Switch(
+                            checked = settings.notificationsEnabled,
+                            onCheckedChange = { enabled ->
+                                viewModel.updateNotifications(enabled)
+                                if (enabled) onRequestNotificationPermission()
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.White,
+                                checkedTrackColor = CozyLeafGreen,
+                                uncheckedTrackColor = CozyCardAlt
                             )
+                        )
+                    }
+
+                    HorizontalDivider(color = CozyBorderSubtle, modifier = Modifier.padding(vertical = 10.dp))
+
+                    // Vibration Switch
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Vibración Háptica", color = CozyCocoaText, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium))
+                            Text("Vibra suavemente al iniciar, pausar y terminar", color = CozyCocoaMuted, style = MaterialTheme.typography.labelSmall)
                         }
-
-                        HorizontalDivider(color = SurfaceContainer, modifier = Modifier.padding(vertical = 10.dp))
-
-                        // Vibration Switch
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Vibración Háptica", color = OnSurface, style = MaterialTheme.typography.bodyMedium)
-                                Text("Vibrar al iniciar, pausar y finalizar sesiones", color = OutlineColor, style = MaterialTheme.typography.labelSmall)
-                            }
-                            Switch(
-                                checked = settings.vibrationEnabled,
-                                onCheckedChange = { viewModel.updateVibration(it) },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = Color.Black,
-                                    checkedTrackColor = PrimaryContainer
-                                )
+                        Switch(
+                            checked = settings.vibrationEnabled,
+                            onCheckedChange = { viewModel.updateVibration(it) },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color.White,
+                                checkedTrackColor = CozyLeafGreen,
+                                uncheckedTrackColor = CozyCardAlt
                             )
-                        }
+                        )
                     }
                 }
             }
 
             // Section 4: Data Management & Reset
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceDark),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SurfaceContainer),
+            Surface(
+                shape = RoundedCornerShape(22.dp),
+                color = CozyCardBg,
+                border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
+                shadowElevation = 1.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .fillMaxHeight()
-                            .background(AccentRose)
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = CozyPeachContainer,
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Filled.DeleteForever,
+                                    contentDescription = null,
+                                    tint = CozyPeach,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "Gestión de Datos",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = CozyForestDark
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Tus datos se guardan de forma local y segura en este dispositivo.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = CozyCocoaMuted
                     )
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Filled.DeleteForever,
-                                contentDescription = null,
-                                tint = AccentRose,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Gestión de Datos",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = OnSurface,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(
-                            text = "Puedes vaciar tu agenda o limpiar todos los registros en cualquier momento.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = OutlineColor
-                        )
-
-                        Spacer(modifier = Modifier.height(14.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        Button(
+                            onClick = {
+                                viewModel.clearAllTasks {
+                                    Toast.makeText(context, "Se vaciaron todas las tareas", Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = CozyCardAlt,
+                                contentColor = CozyCocoaText
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Button(
-                                onClick = {
-                                    viewModel.clearAllTasks {
-                                        Toast.makeText(context, "Se borraron todas las tareas", Toast.LENGTH_SHORT).show()
-                                    }
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = SurfaceContainer,
-                                    contentColor = OnSurface
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text("Limpiar Tareas", style = MaterialTheme.typography.labelSmall)
-                            }
-
-                            Button(
-                                onClick = {
-                                    viewModel.clearAllSchedule {
-                                        Toast.makeText(context, "Se borró el horario semanal", Toast.LENGTH_SHORT).show()
-                                    }
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = SurfaceContainer,
-                                    contentColor = OnSurface
-                                ),
-                                shape = RoundedCornerShape(10.dp),
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text("Limpiar Horario", style = MaterialTheme.typography.labelSmall)
-                            }
+                            Text("Limpiar Tareas", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold))
                         }
-
-                        Spacer(modifier = Modifier.height(8.dp))
 
                         Button(
-                            onClick = { showResetDialog = true },
+                            onClick = {
+                                viewModel.clearAllSchedule {
+                                    Toast.makeText(context, "Se borró el horario semanal", Toast.LENGTH_SHORT).show()
+                                }
+                            },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = AccentRose.copy(alpha = 0.15f),
-                                contentColor = AccentRose
+                                containerColor = CozyCardAlt,
+                                contentColor = CozyCocoaText
                             ),
-                            shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier.fillMaxWidth()
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Filled.Refresh, contentDescription = null, tint = AccentRose, modifier = Modifier.size(16.dp))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Restablecer todos los datos de la app")
+                            Text("Limpiar Horario", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold))
                         }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(
+                        onClick = { showResetDialog = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CozyPeachContainer,
+                            contentColor = CozyPeach
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Filled.Refresh, contentDescription = null, tint = CozyPeach, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Restablecer todos los datos de la app", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold))
                     }
                 }
             }
 
             // App Info Card
             Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = SurfaceContainer,
+                shape = RoundedCornerShape(18.dp),
+                color = CozyCardBg,
+                border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Info,
-                        contentDescription = null,
-                        tint = PrimaryIndigo,
-                        modifier = Modifier.size(20.dp)
-                    )
+                    Surface(
+                        shape = CircleShape,
+                        color = CozyLeafGreenContainer,
+                        modifier = Modifier.size(36.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Filled.Info,
+                                contentDescription = null,
+                                tint = CozyLeafGreen,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "Calmodoro • Horario & Pomodoro",
+                            text = "Calmodoro • Isla de Productividad 🍃",
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = OnSurface
+                            color = CozyCocoaText
                         )
                         Text(
-                            text = "Versión 1.2.0 • Gestión académica y concentración",
+                            text = "Versión 2.0 • Estilo Cozy & Enfoque Académico",
                             style = MaterialTheme.typography.labelSmall,
-                            color = OutlineColor
+                            color = CozyCocoaMuted
                         )
                     }
                 }
@@ -601,9 +608,9 @@ fun SettingsScreen(
         if (showResetDialog) {
             AlertDialog(
                 onDismissRequest = { showResetDialog = false },
-                title = { Text("¿Restablecer todos los datos?") },
+                title = { Text("¿Restablecer todos los datos? 🍂", fontWeight = FontWeight.Bold, color = CozyForestDark) },
                 text = {
-                    Text("Esta acción eliminará permanentemente todas tus tareas, horarios semanales e historial de concentración.")
+                    Text("Esta acción eliminará de forma permanente todas tus tareas, horarios semanales y registros de concentración.", color = CozyCocoaText)
                 },
                 confirmButton = {
                     Button(
@@ -613,20 +620,21 @@ fun SettingsScreen(
                             }
                             showResetDialog = false
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = AccentRose, contentColor = Color.White)
+                        colors = ButtonDefaults.buttonColors(containerColor = CozyPeach, contentColor = Color.White),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
                         Text("Sí, restablecer")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showResetDialog = false }) {
-                        Text("Cancelar", color = OnSurface)
+                        Text("Cancelar", color = CozyCocoaText)
                     }
                 },
-                containerColor = SurfaceDark,
-                textContentColor = OnSurfaceVariant,
-                titleContentColor = OnSurface
+                containerColor = CozyCreamBg,
+                shape = RoundedCornerShape(20.dp)
             )
         }
     }
 }
+

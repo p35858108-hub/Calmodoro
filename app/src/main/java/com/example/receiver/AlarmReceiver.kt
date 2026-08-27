@@ -58,25 +58,17 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val title = intent.getStringExtra(EXTRA_TITLE) ?: "¡Tiempo cumplido!"
         val message = intent.getStringExtra(EXTRA_MESSAGE) ?: "Tu sesión de Pomodoro ha finalizado."
-        val soundChoice = intent.getStringExtra(EXTRA_SOUND_CHOICE) ?: "digital_bell"
         val vibrationEnabled = intent.getBooleanExtra(EXTRA_VIBRATION, true)
 
-        // 1. Play SoundPool alarm sound
-        try {
-            SoundManager.getInstance(context).playFinish(soundChoice)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        // 2. Vibrate
+        // 1. Vibrate gently if enabled
         if (vibrationEnabled) {
             vibrateAlert(context)
         }
 
-        // 3. Show Heads-up Alert Notification
+        // 2. Show Heads-up Alert Notification (clean, non-looping)
         showAlarmNotification(context, title, message)
 
-        // 4. Notify Engine to complete session
+        // 3. Notify Engine to complete session and trigger gentle finish audio
         PomodoroEngine.getInstance(context).onAlarmTriggered()
     }
 
@@ -85,12 +77,12 @@ class AlarmReceiver : BroadcastReceiver() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
                 val vibrator = vibratorManager?.defaultVibrator
-                val pattern = longArrayOf(0, 400, 200, 400, 200, 600)
+                val pattern = longArrayOf(0, 300, 150, 300)
                 vibrator?.vibrate(VibrationEffect.createWaveform(pattern, -1))
             } else {
                 @Suppress("DEPRECATION")
                 val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
-                val pattern = longArrayOf(0, 400, 200, 400, 200, 600)
+                val pattern = longArrayOf(0, 300, 150, 300)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator?.vibrate(VibrationEffect.createWaveform(pattern, -1))
                 } else {
@@ -135,9 +127,9 @@ class AlarmReceiver : BroadcastReceiver() {
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setOnlyAlertOnce(true)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
             .build()
 
         notificationManager.notify(notificationId, notification)
@@ -173,11 +165,11 @@ class AlarmReceiver : BroadcastReceiver() {
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_EVENT)
+            .setOnlyAlertOnce(true)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
             .build()
 
         notificationManager.notify(NOTIFICATION_ID, notification)

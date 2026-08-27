@@ -1,7 +1,10 @@
 package com.example.ui.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -24,25 +27,27 @@ import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Timer
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.OnSecondaryContainer
-import com.example.ui.theme.OnSurfaceVariant
-import com.example.ui.theme.OutlineVariant
-import com.example.ui.theme.SecondaryContainer
-import com.example.ui.theme.SurfaceContainerLowest
-import com.example.ui.theme.SurfaceDark
+import com.example.ui.theme.CozyBorder
+import com.example.ui.theme.CozyCardBg
+import com.example.ui.theme.CozyCocoaMuted
+import com.example.ui.theme.CozyForestDark
+import com.example.ui.theme.CozyLeafGreen
+import com.example.ui.theme.CozyLeafGreenContainer
 
 enum class AppTab(val label: String, val testTag: String) {
     CALENDAR("Calendario", "tab_calendar"),
@@ -57,22 +62,43 @@ fun CalmodoroBottomNavBar(
     onTabSelected: (AppTab) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(SurfaceDark)
             .navigationBarsPadding()
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = OutlineVariant.copy(alpha = 0.5f)
+        SurfaceNavCard(
+            selectedTab = selectedTab,
+            onTabSelected = onTabSelected
         )
+    }
+}
+
+@Composable
+private fun SurfaceNavCard(
+    selectedTab: AppTab,
+    onTabSelected: (AppTab) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 6.dp,
+                shape = RoundedCornerShape(26.dp),
+                spotColor = Color(0x3348A868),
+                ambientColor = Color(0x223A2E24)
+            )
+            .clip(RoundedCornerShape(26.dp))
+            .background(CozyCardBg)
+            .border(2.dp, CozyBorder, RoundedCornerShape(26.dp))
+            .padding(horizontal = 8.dp, vertical = 6.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(68.dp)
-                .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
+                .height(58.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
             AppTab.entries.forEach { tab ->
@@ -86,40 +112,52 @@ fun CalmodoroBottomNavBar(
                     AppTab.SETTINGS -> Icons.Filled.Settings to Icons.Outlined.Settings
                 }
 
-                val pillBg = if (isSelected) SecondaryContainer else androidx.compose.ui.graphics.Color.Transparent
-                val contentColor = if (isSelected) OnSecondaryContainer else OnSurfaceVariant
+                val pillBg by animateColorAsState(
+                    targetValue = if (isSelected) CozyLeafGreenContainer else Color.Transparent,
+                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                    label = "pill_bg"
+                )
+                val contentColor by animateColorAsState(
+                    targetValue = if (isSelected) CozyForestDark else CozyCocoaMuted,
+                    label = "content_color"
+                )
 
                 Box(
                     modifier = Modifier
                         .testTag(tab.testTag)
-                        .clip(RoundedCornerShape(24.dp))
+                        .clip(RoundedCornerShape(20.dp))
                         .background(pillBg)
                         .clickable(
                             interactionSource = interactionSource,
                             indication = null
                         ) { onTabSelected(tab) }
-                        .padding(horizontal = if (isSelected) 18.dp else 12.dp, vertical = 6.dp),
+                        .padding(horizontal = if (isSelected) 14.dp else 10.dp, vertical = 6.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Icon(
                             imageVector = if (isSelected) activeIcon else inactiveIcon,
                             contentDescription = tab.label,
-                            tint = contentColor,
-                            modifier = Modifier.size(22.dp)
+                            tint = if (isSelected) CozyLeafGreen else CozyCocoaMuted,
+                            modifier = Modifier.size(20.dp)
                         )
-                        Text(
-                            text = tab.label,
-                            color = contentColor,
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
-                            modifier = Modifier.padding(top = 2.dp)
-                        )
+                        if (isSelected) {
+                            Text(
+                                text = tab.label,
+                                color = contentColor,
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+

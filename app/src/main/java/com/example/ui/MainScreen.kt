@@ -1,11 +1,5 @@
 package com.example.ui
 
-import com.example.ui.calendar.*
-import com.example.ui.pomodoro.*
-import com.example.ui.schedule.*
-import com.example.ui.settings.*
-import com.example.ui.navigation.*
-import com.example.ui.components.*
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -19,30 +13,29 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-// Imports de tus pantallas y modelos
-import com.example.AppTab
-import com.example.CalmodoroBottomNavBar
-import com.example.CalendarScreen
-import com.example.CalendarViewModel
-import com.example.PomodoroScreen
-import com.example.PomodoroViewModel
-import com.example.ScheduleScreen
-import com.example.ScheduleViewModel
-import com.example.SettingsScreen
-import com.example.SettingsViewModel
+import com.example.data.local.entity.TaskEntity
+import com.example.ui.calendar.CalendarScreen
+import com.example.ui.calendar.CalendarViewModel
+import com.example.ui.components.AppTab
+import com.example.ui.components.CalmodoroBottomNavBar
+import com.example.ui.pomodoro.PomodoroScreen
+import com.example.ui.pomodoro.PomodoroViewModel
+import com.example.ui.schedule.ScheduleScreen
+import com.example.ui.schedule.ScheduleViewModel
+import com.example.ui.settings.SettingsScreen
+import com.example.ui.settings.SettingsViewModel
+import com.example.ui.theme.CozyCreamBg
 
 @Composable
 fun MainScreen(
@@ -52,11 +45,14 @@ fun MainScreen(
     settingsViewModel: SettingsViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    var currentTab by rememberSaveable { mutableStateOf(AppTab.SCHEDULE) }
+    var currentTab by remember { mutableStateOf(AppTab.CALENDAR) }
 
+    // Request POST_NOTIFICATIONS permission for Android 13+
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
-    ) { /* Manejar resultado si es necesario */ }
+    ) { isGranted ->
+        // Updated state if needed
+    }
 
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -64,7 +60,6 @@ fun MainScreen(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
-            
             if (!hasPermission) {
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
@@ -72,7 +67,7 @@ fun MainScreen(
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = CozyCreamBg,
         bottomBar = {
             CalmodoroBottomNavBar(
                 selectedTab = currentTab,
@@ -83,7 +78,7 @@ fun MainScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(CozyCreamBg)
                 .padding(innerPadding)
         ) {
             AnimatedContent(
@@ -92,30 +87,40 @@ fun MainScreen(
                 label = "tab_navigation"
             ) { tab ->
                 when (tab) {
-                    AppTab.CALENDAR -> CalendarScreen(
-                        viewModel = calendarViewModel,
-                        onNavigateToSchedule = { currentTab = AppTab.SCHEDULE },
-                        onStartPomodoroForTask = { task ->
-                            pomodoroViewModel.attachTask(task)
-                            currentTab = AppTab.POMODORO
-                        }
-                    )
-                    AppTab.POMODORO -> PomodoroScreen(viewModel = pomodoroViewModel)
-                    AppTab.SCHEDULE -> ScheduleScreen(
-                        viewModel = scheduleViewModel,
-                        onStartPomodoroForClass = { title, durationMin ->
-                            pomodoroViewModel.setCustomFocusGoal(title, durationMin)
-                            currentTab = AppTab.POMODORO
-                        }
-                    )
-                    AppTab.SETTINGS -> SettingsScreen(
-                        viewModel = settingsViewModel,
-                        onRequestNotificationPermission = {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    AppTab.CALENDAR -> {
+                        CalendarScreen(
+                            viewModel = calendarViewModel,
+                            onNavigateToSchedule = { currentTab = AppTab.SCHEDULE },
+                            onStartPomodoroForTask = { task: TaskEntity ->
+                                pomodoroViewModel.attachTask(task)
+                                currentTab = AppTab.POMODORO
                             }
-                        }
-                    )
+                        )
+                    }
+                    AppTab.POMODORO -> {
+                        PomodoroScreen(
+                            viewModel = pomodoroViewModel
+                        )
+                    }
+                    AppTab.SCHEDULE -> {
+                        ScheduleScreen(
+                            viewModel = scheduleViewModel,
+                            onStartPomodoroForClass = { title, durationMin ->
+                                pomodoroViewModel.setCustomFocusGoal(title, durationMin)
+                                currentTab = AppTab.POMODORO
+                            }
+                        )
+                    }
+                    AppTab.SETTINGS -> {
+                        SettingsScreen(
+                            viewModel = settingsViewModel,
+                            onRequestNotificationPermission = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }
