@@ -1,5 +1,6 @@
 package com.example.ui.calendar
 
+import com.example.ui.theme.*
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
