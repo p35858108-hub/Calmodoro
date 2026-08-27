@@ -38,3 +38,10 @@ val AccentSky = Color(0xFF81D4FA)              // Cielo despejado
 val ErrorColor = Color(0xFFE57373)             // Rojo suave pastel
 val ErrorContainer = Color(0xFFFFCDD2)        // Fondo alerta pastel
 val OnError = Color(0xFF5F1414)                // Texto alerta
+
+// Aliases / Colores faltantes para pantallas
+val PrimaryIndigo = Color(0xFF6366F1)
+val AccentAmber = Color(0xFFF59E0B)
+val AccentEmerald = Color(0xFF10B981)
+val AccentIndigo = Color(0xFF4F46E5)
+val AccentRose = Color(0xFFF43F5E)
