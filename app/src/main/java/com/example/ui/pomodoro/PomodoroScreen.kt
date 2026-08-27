@@ -1,5 +1,6 @@
 package com.example.ui
 
+import com.example.ui.theme.*
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
