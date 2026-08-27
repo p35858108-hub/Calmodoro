@@ -1,4 +1,4 @@
-package com.example.ui.theme // Cambia esto si tu paquete de UI es diferente
+package app.calmodoro.com.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
