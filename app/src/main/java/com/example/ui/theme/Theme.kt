@@ -1,4 +1,4 @@
-package app.calmodoro.com.ui.theme
+package com.example.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
