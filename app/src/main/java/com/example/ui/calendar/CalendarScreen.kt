@@ -373,7 +373,7 @@ fun CalendarScreen(
                                     Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(18.dp))
                                 }
                                 Text(
-                                    text = "Calendario Mensual de la Isla",
+                                    text = "Vista y planificación mensual",
                                     style = MaterialTheme.typography.labelMedium,
                                     color = CozyCocoaMuted
                                 )
@@ -1380,7 +1380,7 @@ fun EmptyTaskCard(onAddNewTask: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Tómate un respiro en la isla o añade una nueva actividad.",
+                text = "Tómate un respiro o añade una nueva actividad.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = CozyCocoaMuted,
                 textAlign = TextAlign.Center

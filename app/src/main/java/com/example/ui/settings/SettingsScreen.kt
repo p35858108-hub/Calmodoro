@@ -88,7 +88,7 @@ import com.example.ui.theme.CozySky
 import com.example.ui.theme.CozySkyContainer
 
 val AvailableSounds = listOf(
-    "digital_bell" to "Campana de Isla 🔔",
+    "digital_bell" to "Campana Clásica 🔔",
     "wind" to "Campanillas de Viento 🍃",
     "lofi" to "Melodía Acústica 🎶",
     "minimal" to "Gota de Rocío 💧"
@@ -119,7 +119,7 @@ fun SettingsScreen(
                 .padding(bottom = 90.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Hero Banner Illustration Card
+            // Settings Header Card
             Surface(
                 shape = RoundedCornerShape(24.dp),
                 color = CozyCardBg,
@@ -127,33 +127,22 @@ fun SettingsScreen(
                 shadowElevation = 2.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_cozy_banner),
-                        contentDescription = "Pueblo Cozy",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(130.dp)
-                            .clip(RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "Ajustes de la Isla",
-                                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                                color = CozyForestDark
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(18.dp))
-                        }
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Personaliza tus rutinas, sonidos relajantes y preferencias de estudio.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = CozyCocoaMuted,
-                            modifier = Modifier.padding(top = 2.dp)
+                            text = "Ajustes",
+                            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                            color = CozyForestDark
                         )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Icon(Icons.Filled.Eco, contentDescription = null, tint = CozyLeafGreen, modifier = Modifier.size(18.dp))
                     }
+                    Text(
+                        text = "Personaliza tus rutinas, sonidos relajantes y preferencias de estudio.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = CozyCocoaMuted,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
                 }
             }
 
@@ -590,7 +579,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "Calmodoro • Isla de Productividad 🍃",
+                            text = "Calmodoro • Temporizador & Calendario 🍃",
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                             color = CozyCocoaText
                         )

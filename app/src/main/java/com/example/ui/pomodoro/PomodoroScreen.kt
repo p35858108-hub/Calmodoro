@@ -131,52 +131,6 @@ fun PomodoroScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // Cozy Mascot & Header Greeting Card
-            Surface(
-                shape = RoundedCornerShape(22.dp),
-                color = CozyCardBg,
-                border = androidx.compose.foundation.BorderStroke(2.dp, CozyBorder),
-                shadowElevation = 2.dp,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_cozy_mascot),
-                        contentDescription = "Mascota Cozy",
-                        modifier = Modifier
-                            .size(54.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, CozyLeafGreenContainer, CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "Isla de Concentración",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = CozyForestDark
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Icon(
-                                imageVector = Icons.Filled.Eco,
-                                contentDescription = null,
-                                tint = CozyLeafGreen,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                        Text(
-                            text = if (state.isRunning) "¡Buen trabajo! Sigue así 🍃" else "Tómate tu tiempo y respira ☕",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = CozyCocoaMuted
-                        )
-                    }
-                }
-            }
-
             // Active Task Banner (Cozy Speech-Bubble style)
             Surface(
                 shape = RoundedCornerShape(18.dp),

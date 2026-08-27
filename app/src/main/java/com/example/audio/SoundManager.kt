@@ -51,16 +51,18 @@ class SoundManager private constructor(private val context: Context) {
         }
     }
 
+    private var currentStreamId: Int = 0
+
     fun playStart() {
-        playSound("sound_start")
+        playSound("sound_start", volume = 0.7f)
     }
 
     fun playPause() {
-        playSound("sound_pause")
+        playSound("sound_pause", volume = 0.6f)
     }
 
     fun playClick() {
-        playSound("sound_click", volume = 0.5f)
+        playSound("sound_click", volume = 0.35f)
     }
 
     fun playFinish(soundChoice: String = "digital_bell") {
@@ -70,17 +72,36 @@ class SoundManager private constructor(private val context: Context) {
             "minimal" -> "sound_alarm_minimal"
             else -> "sound_alarm_digital_bell"
         }
-        playSound(soundKey, volume = 1.0f)
+        playSound(soundKey, volume = 0.8f)
     }
 
     fun previewSound(soundChoice: String) {
         playFinish(soundChoice)
     }
 
-    private fun playSound(key: String, volume: Float = 0.9f) {
+    fun stopAllSounds() {
+        try {
+            if (currentStreamId != 0) {
+                soundPool?.stop(currentStreamId)
+                currentStreamId = 0
+            }
+            soundPool?.autoPause()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun playSound(key: String, volume: Float = 0.8f) {
         val soundId = soundIdMap[key]
         if (soundId != null && soundId > 0) {
-            soundPool?.play(soundId, volume, volume, 1, 0, 1.0f)
+            try {
+                if (currentStreamId != 0) {
+                    soundPool?.stop(currentStreamId)
+                }
+                currentStreamId = soundPool?.play(soundId, volume, volume, 1, 0, 1.0f) ?: 0
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

@@ -29,6 +29,7 @@ import com.example.ui.calendar.CalendarScreen
 import com.example.ui.calendar.CalendarViewModel
 import com.example.ui.components.AppTab
 import com.example.ui.components.CalmodoroBottomNavBar
+import com.example.ui.feature.DevelopmentScreen
 import com.example.ui.pomodoro.PomodoroScreen
 import com.example.ui.pomodoro.PomodoroViewModel
 import com.example.ui.schedule.ScheduleScreen
@@ -110,6 +111,9 @@ fun MainScreen(
                                 currentTab = AppTab.POMODORO
                             }
                         )
+                    }
+                    AppTab.FEATURE -> {
+                        DevelopmentScreen()
                     }
                     AppTab.SETTINGS -> {
                         SettingsScreen(

@@ -140,49 +140,6 @@ fun ScheduleScreen(
                             color = CozyCocoaMuted
                         )
                     }
-
-                    // Sync button
-                    Surface(
-                        shape = RoundedCornerShape(14.dp),
-                        color = CozySkyContainer,
-                        border = androidx.compose.foundation.BorderStroke(1.5.dp, CozySky.copy(alpha = 0.4f)),
-                        modifier = Modifier
-                            .clickable {
-                                viewModel.importScheduleToToday { count ->
-                                    if (count > 0) {
-                                        Toast.makeText(
-                                            context,
-                                            "¡Se sincronizaron $count clases a tu agenda de hoy!",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    } else {
-                                        Toast.makeText(
-                                            context,
-                                            "No hay clases en este día para sincronizar",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                            }
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Download,
-                                contentDescription = "Sincronizar",
-                                tint = CozySky,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "Importar a Hoy",
-                                color = CozySky,
-                                style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                            )
-                        }
-                    }
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))

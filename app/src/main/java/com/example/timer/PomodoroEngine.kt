@@ -207,12 +207,17 @@ class PomodoroEngine private constructor(private val context: Context) {
         }
     }
 
+    private val isFinishingSession = java.util.concurrent.atomic.AtomicBoolean(false)
+
     private fun finishSession() {
+        if (!isFinishingSession.compareAndSet(false, true)) return
         tickerJob?.cancel()
+        tickerJob = null
         cancelExactAlarm()
 
-        // Stop any active ambient background noise
+        // Stop any active ambient background noise immediately
         AmbientSoundPlayer.setSound(AmbientSound.NONE)
+        AmbientSoundPlayer.stop()
 
         val currentState = _stateFlow.value
         val soundChoice = currentState.soundChoice
@@ -240,6 +245,7 @@ class PomodoroEngine private constructor(private val context: Context) {
                     wasCompleted = true
                 )
             )
+            isFinishingSession.set(false)
         }
 
         _stateFlow.update {

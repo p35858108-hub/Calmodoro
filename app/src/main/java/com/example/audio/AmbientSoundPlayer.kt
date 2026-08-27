@@ -36,12 +36,12 @@ object AmbientSoundPlayer {
     private const val BUFFER_SIZE = 8192
 
     fun setSound(sound: AmbientSound) {
-        if (_currentSound.value == sound) return
+        val prev = _currentSound.value
         _currentSound.value = sound
 
         if (sound == AmbientSound.NONE) {
             stop()
-        } else {
+        } else if (prev != sound) {
             play(sound)
         }
     }
@@ -50,10 +50,11 @@ object AmbientSoundPlayer {
         playbackJob?.cancel()
         playbackJob = null
         try {
-            audioTrack?.pause()
-            audioTrack?.flush()
-            audioTrack?.release()
+            val track = audioTrack
             audioTrack = null
+            track?.stop()
+            track?.flush()
+            track?.release()
         } catch (e: Exception) {
             e.printStackTrace()
         }

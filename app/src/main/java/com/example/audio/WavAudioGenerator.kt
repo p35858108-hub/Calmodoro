@@ -15,7 +15,7 @@ object WavAudioGenerator {
     private const val SAMPLE_RATE = 44100
     private const val NUM_CHANNELS = 1
     private const val BITS_PER_SAMPLE = 16
-    private const val AUDIO_VERSION = "calmodoro_audio_v2"
+    private const val AUDIO_VERSION = "calmodoro_audio_v4"
 
     fun ensureSoundFiles(context: Context): Map<String, File> {
         val soundDir = File(context.cacheDir, "sounds").apply { mkdirs() }

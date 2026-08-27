@@ -18,11 +18,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.Settings
@@ -53,6 +55,7 @@ enum class AppTab(val label: String, val testTag: String) {
     CALENDAR("Calendario", "tab_calendar"),
     POMODORO("Pomodoro", "tab_pomodoro"),
     SCHEDULE("Horario", "tab_schedule"),
+    FEATURE("Espacio", "tab_feature"),
     SETTINGS("Ajustes", "tab_settings")
 }
 
@@ -109,6 +112,7 @@ private fun SurfaceNavCard(
                     AppTab.CALENDAR -> Icons.Filled.CalendarToday to Icons.Outlined.CalendarToday
                     AppTab.POMODORO -> Icons.Filled.Timer to Icons.Outlined.Timer
                     AppTab.SCHEDULE -> Icons.Filled.School to Icons.Outlined.School
+                    AppTab.FEATURE -> Icons.Filled.AutoAwesome to Icons.Outlined.AutoAwesome
                     AppTab.SETTINGS -> Icons.Filled.Settings to Icons.Outlined.Settings
                 }
 
